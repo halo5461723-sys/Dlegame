@@ -1,9 +1,9 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somalia World V14.9 - Class Identity</title>
+    <title>Somalia World V15.0 - Fixed Class Shop</title>
     <style>
         :root { --p-color: #a200ff; --gold: #ffd700; --bg-dark: rgba(0, 0, 0, 0.95); }
         body { background: #0b001a; color: #e0b0ff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; }
@@ -16,8 +16,8 @@
         button { background: #4b0082; color: white; border: 1px solid var(--p-color); padding: 10px; margin: 4px; cursor: pointer; width: 94%; border-radius: 8px; font-weight: bold; }
         .item-card { border: 1px solid #444; padding: 10px; margin: 5px; background: rgba(255,255,255,0.05); border-radius: 5px; text-align: left; font-size: 12px; }
         .shop-tab { display: flex; justify-content: space-around; margin-bottom: 10px; gap: 5px; }
-        .shop-tab span { cursor: pointer; padding: 8px 5px; border: 1px solid var(--p-color); border-radius: 5px; font-size: 11px; flex: 1; background: #1a1a1a; }
-        .active-tab { background: var(--p-color) !important; color: white; }
+        .shop-tab span { cursor: pointer; padding: 8px 5px; border: 1px solid var(--p-color); border-radius: 5px; font-size: 11px; flex: 1; background: #1a1a1a; color: white; }
+        .active-tab { background: var(--p-color) !important; font-weight: bold; }
         .log { font-size: 12px; height: 120px; overflow-y: auto; color: #ccc; background: rgba(0,0,0,0.8); padding: 8px; margin-top: 10px; text-align: left; border: 1px solid #444; }
         input { padding: 12px; width: 85%; margin-bottom: 10px; border-radius: 5px; border: 1px solid var(--p-color); background: #1a1a1a; color: white; }
     </style>
@@ -26,7 +26,7 @@
 
 <div class="container">
     <div id="auth-screen" class="screen active">
-        <h1>SOMALIA WORLD V14.9</h1>
+        <h1>SOMALIA WORLD V15.0</h1>
         <input type="text" id="user" placeholder="Tên nhân vật"><br>
         <input type="password" id="pass" placeholder="Mật khẩu"><br>
         <button onclick="auth('login')">BẮT ĐẦU</button>
@@ -62,11 +62,11 @@
     </div>
 
     <div id="shop-screen" class="screen">
-        <h2>CỬA HÀNG <span id="user-job-tag" style="font-size:10px; color:var(--gold);"></span></h2>
+        <h2>CỬA HÀNG</h2>
         <div class="shop-tab">
-            <span id="tab-Chiến Binh" onclick="renderShop('Chiến Binh')">ĐỒ CHIẾN BINH</span>
-            <span id="tab-Pháp Sư" onclick="renderShop('Pháp Sư')">ĐỒ PHÁP SƯ</span>
-            <span id="tab-Phụ Kiện" onclick="renderShop('Phụ Kiện')">PHỤ KIỆN</span>
+            <span id="tab-War" onclick="renderShop('War')">CHIẾN BINH</span>
+            <span id="tab-Mag" onclick="renderShop('Mag')">PHÁP SƯ</span>
+            <span id="tab-Acc" onclick="renderShop('Acc')">PHỤ KIỆN</span>
         </div>
         <div id="shop-list" style="max-height: 350px; overflow-y: auto;"></div>
         <button onclick="showScreen('game-screen')">QUAY LẠI</button>
@@ -86,34 +86,34 @@
         { name: "Slime Xanh", hp: 100, gold: 60, phan: 0.1 },
         { name: "Vua Slime", hp: 2500, gold: 600, phan: 0.1 },
         { name: "Lính Xương", hp: 7000, gold: 1800, phan: 0.1 },
-        { name: "Vua Xương Cổ Đại", hp: 40000, gold: 25000, phan: 0.2, drop: { gem: 1, rate: 0.2 } },
+        { name: "Vua Xương Cổ Đại", hp: 45000, gold: 28000, phan: 0.2 },
         { name: "Thủy Long (BOSS)", hp: 600000, gold: 80000, phan: 0.3, drop: { gem: 3, rate: 0.4 } },
         { name: "Hắc Quái", hp: 1000000, gold: 100000, phan: 0.5 },
-        { name: "Hắc Binh", hp: 1800000, gold: 130000, phan: 0.5 },
-        { name: "Hắc Sĩ (LIMIT BOSS)", hp: 4000000, gold: 300000, phan: 0.3, drop: { gem: 10, rate: 1.0 }, special: "time" }
+        { name: "Hắc Binh", hp: 2000000, gold: 150000, phan: 0.5 },
+        { name: "Hắc Sĩ (LIMIT BOSS)", hp: 5000000, gold: 350000, phan: 0.3, drop: { gem: 10, rate: 1.0 }, special: "time" }
     ];
 
     const SHOP_ITEMS = [
-        // ĐỒ CHIẾN BINH
-        { id: 1, name: "⚔️ Kiếm Gỉ", price: 250, type: "tay", dmg: 40, job: "Chiến Binh", cate: "Chiến Binh" },
-        { id: 2, name: "🛡️ Giáp Vải Chiến", price: 250, type: "ao", hpBonus: 100, job: "Chiến Binh", cate: "Chiến Binh" },
-        { id: 3, name: "⚔️ Kiếm Hiệp Sĩ", price: 2500, type: "tay", dmg: 180, job: "Chiến Binh", cate: "Chiến Binh" },
-        { id: 4, name: "🛡️ Giáp Thép", price: 2500, type: "ao", hpBonus: 600, job: "Chiến Binh", cate: "Chiến Binh" },
-        { id: 5, name: "🔥 Găng Tay King", price: 50000, type: "tay", dmg: 600, dmgLvl: 5, job: "Chiến Binh", cate: "Chiến Binh" },
+        // CHIẾN BINH (Nghề: Chiến Binh)
+        { id: 1, name: "⚔️ Kiếm Gỉ", price: 250, type: "tay", dmg: 45, job: "Chiến Binh", cate: "War" },
+        { id: 2, name: "🛡️ Giáp Vải Chiến", price: 250, type: "ao", hpBonus: 120, job: "Chiến Binh", cate: "War" },
+        { id: 3, name: "⚔️ Kiếm Hiệp Sĩ", price: 2500, type: "tay", dmg: 200, job: "Chiến Binh", cate: "War" },
+        { id: 4, name: "🛡️ Giáp Thép", price: 2500, type: "ao", hpBonus: 700, job: "Chiến Binh", cate: "War" },
+        { id: 5, name: "🔥 Găng Tay King", price: 50000, type: "tay", dmg: 650, dmgLvl: 6, job: "Chiến Binh", cate: "War" },
 
-        // ĐỒ PHÁP SƯ
-        { id: 6, name: "🔮 Trượng Gỗ", price: 250, type: "tay", dmg: 50, job: "Pháp Sư", cate: "Pháp Sư" },
-        { id: 7, name: "🧥 Áo Choàng Tập Sự", price: 250, type: "ao", hpBonus: 80, job: "Pháp Sư", cate: "Pháp Sư" },
-        { id: 8, name: "🔮 Trượng Đồ Đệ", price: 2500, type: "tay", dmg: 220, job: "Pháp Sư", cate: "Pháp Sư" },
-        { id: 9, name: "🧥 Áo Choàng Lụa", price: 2500, type: "ao", hpBonus: 500, job: "Pháp Sư", cate: "Pháp Sư" },
-        { id: 10, name: "⚡ Trượng Ma Pháp Sư", price: 50000, type: "tay", dmg: 700, dmgLvl: 5, job: "Pháp Sư", cate: "Pháp Sư" },
+        // PHÁP SƯ (Nghề: Pháp Sư)
+        { id: 6, name: "🔮 Trượng Gỗ", price: 250, type: "tay", dmg: 55, job: "Pháp Sư", cate: "Mag" },
+        { id: 7, name: "🧥 Áo Choàng Tập Sự", price: 250, type: "ao", hpBonus: 100, job: "Pháp Sư", cate: "Mag" },
+        { id: 8, name: "🔮 Trượng Đồ Đệ", price: 2500, type: "tay", dmg: 250, job: "Pháp Sư", cate: "Mag" },
+        { id: 9, name: "🧥 Áo Choàng Lụa", price: 2500, type: "ao", hpBonus: 600, job: "Pháp Sư", cate: "Mag" },
+        { id: 10, name: "⚡ Trượng Ma Pháp Sư", price: 50000, type: "tay", dmg: 750, dmgLvl: 6, job: "Pháp Sư", cate: "Mag" },
 
-        // PHỤ KIỆN CHUNG
-        { id: 100, name: "🧪 Bình Máu", price: 200, type: "pot", cate: "Phụ Kiện" },
-        { id: 11, name: "👟 Giày Tận Thế", price: 70000, type: "giay", hpBonus: 600, cate: "Phụ Kiện" },
-        { id: 12, name: "👖 Quần Animo", price: 70000, type: "quan", hpBonus: 600, cate: "Phụ Kiện" },
-        { id: 13, name: "💍 Nhẫn Blackhole", price: 200000, type: "nhan", hpBonus: 1500, dmgRate: 0.1, cate: "Phụ Kiện" },
-        { id: 14, name: "👑 Vương Miện Thánh", price: "50%", minGold: 999000, type: "non", dmg: 3000, dmgLvl: 10, rarity: "Bí Mật", cate: "Phụ Kiện" }
+        // PHỤ KIỆN
+        { id: 100, name: "🧪 Bình Máu", price: 200, type: "pot", cate: "Acc" },
+        { id: 11, name: "👟 Giày Tận Thế", price: 70000, type: "giay", hpBonus: 700, cate: "Acc" },
+        { id: 12, name: "👖 Quần Animo", price: 70000, type: "quan", hpBonus: 700, cate: "Acc" },
+        { id: 13, name: "💍 Nhẫn Blackhole", price: 200000, type: "nhan", hpBonus: 1500, dmgRate: 0.1, cate: "Acc" },
+        { id: 14, name: "👑 Vương Miện Thánh", price: "50%", minGold: 999000, type: "non", dmg: 3500, dmgLvl: 12, cate: "Acc" }
     ];
 
     let p = { user:"", pass:"", job:"", lvl:1, gold:0, gems:0, hp:200, baseMaxHp:200, baseDmg:30, pots:0, inv:[], equip:{ao:null, tay:null, non:null, giay:null, quan:null, nhan:null} };
@@ -122,15 +122,15 @@
     function auth(type) {
         let u = document.getElementById('user').value.trim();
         let ps = document.getElementById('pass').value.trim();
-        if(!u || !ps) return alert("Nhập đủ thông tin!");
+        if(!u || !ps) return alert("Nhập đủ!");
         let saved = localStorage.getItem(STORAGE_KEY + u);
         if(type === 'reg') {
             if(saved) return alert("Tên đã có!");
-            p.user = u; p.pass = ps; save(); alert("Đăng ký thành công!"); showScreen('job-screen');
+            p.user = u; p.pass = ps; save(); alert("Đã tạo acc!"); showScreen('job-screen');
         } else {
-            if(!saved) return alert("Không tìm thấy acc!");
+            if(!saved) return alert("Ko thấy acc!");
             p = JSON.parse(saved);
-            if(p.pass !== ps) return alert("Sai mật khẩu!");
+            if(p.pass !== ps) return alert("Sai MK!");
             p.job ? showScreen('game-screen') : showScreen('job-screen');
         }
         initMobSelect(); updateUI();
@@ -145,7 +145,7 @@
         if(selected.special === "time") {
             let now = new Date();
             if(!(now.getHours() % 2 === 0 && now.getMinutes() <= 10)) {
-                alert("Hắc Sĩ chỉ xuất hiện 10 phút đầu của GIỜ CHẴN!");
+                alert("Boss chỉ xuất hiện 10p đầu giờ chẵn!");
                 document.getElementById('mob-select').value = 0;
                 return;
             }
@@ -164,29 +164,27 @@
         let s = calculateStats();
         let phan = Math.floor(s.totalDmg * (mob.phan || 0.1));
         mob.hp -= s.totalDmg; p.hp -= phan;
-        log(`⚔️ Gây -${s.totalDmg}. Bị phản -${phan}.`);
+        log(`⚔️ Gây -${s.totalDmg}. Phản -${phan}.`);
         if(mob.hp <= 0) {
             p.gold += mob.gold; p.lvl++;
-            if(mob.drop && Math.random() <= mob.drop.rate) { p.gems += mob.drop.gem; log(`💎 +${mob.drop.gem} Ngọc!`); }
+            if(mob.drop && Math.random() <= mob.drop.rate) p.gems += mob.drop.gem;
             log(`✨ Diệt ${mob.name}! +${mob.gold}$`);
             mob.hp = mob.maxHp;
         }
-        if(p.hp <= 0) { alert("Bạn đã tử trận!"); p.hp = s.totalMaxHp; mob.hp = mob.maxHp; }
+        if(p.hp <= 0) { alert("Bạn đã gục!"); p.hp = s.totalMaxHp; mob.hp = mob.maxHp; }
         save(); updateUI();
     }
 
     function renderShop(cate) {
         document.querySelectorAll('.shop-tab span').forEach(s => s.classList.remove('active-tab'));
         document.getElementById('tab-' + cate).classList.add('active-tab');
-        document.getElementById('user-job-tag').innerText = `(Bạn là: ${p.job})`;
 
         let filtered = SHOP_ITEMS.filter(i => i.cate === cate);
         document.getElementById('shop-list').innerHTML = filtered.map(itm => {
-            let pDisp = itm.price === "50%" ? "50% Vàng" : itm.price + "$";
             let canBuy = !itm.job || itm.job === p.job;
             return `<div class="item-card" style="opacity: ${canBuy?1:0.5}">
-                <b>${itm.name}</b> [${itm.type.toUpperCase()}]<br>
-                Giá: ${pDisp} ${itm.job ? `<i style="color:#aaa">(${itm.job})</i>` : ''}
+                <b>${itm.name}</b><br>Giá: ${itm.price === "50%" ? "50% Vàng" : itm.price + "$"}<br>
+                ${itm.job ? `<small>Dành cho: ${itm.job}</small>` : ''}
                 <button onclick="buy(${itm.id})" style="float:right; background:${canBuy?'':'#333'}">${canBuy?'MUA':'SAI NGHỀ'}</button>
             </div>`;
         }).join('');
@@ -194,14 +192,13 @@
 
     function buy(id) {
         let itm = SHOP_ITEMS.find(i => i.id === id);
-        if(itm.job && itm.job !== p.job) return alert("Nghề của bạn không dùng được món này!");
+        if(itm.job && itm.job !== p.job) return alert("Sai nghề!");
         let cost = itm.price === "50%" ? Math.floor(p.gold * 0.5) : itm.price;
-        if(itm.price === "50%" && p.gold < itm.minGold) return alert("Cần 999k vàng!");
-        
+        if(itm.price === "50%" && p.gold < itm.minGold) return alert("Thiếu vàng!");
         if(p.gold >= cost) {
             p.gold -= cost;
             if(itm.type === 'pot') p.pots++; else p.inv.push({...itm, uid: Date.now()});
-            save(); updateUI(); alert("Mua thành công!");
+            save(); updateUI(); alert("Đã mua!");
         } else alert("Thiếu tiền!");
     }
 
@@ -218,11 +215,11 @@
         save(); updateUI(); renderInv();
     }
 
-    function setJob(j) { p.job = j; p.baseMaxHp = (j === 'Chiến Binh' ? 300 : 250); p.hp = p.baseMaxHp; save(); updateUI(); showScreen('game-screen'); }
+    function setJob(j) { p.job = j; p.baseMaxHp = (j === 'Chiến Binh' ? 350 : 300); p.hp = p.baseMaxHp; save(); updateUI(); showScreen('game-screen'); }
     function updateUI() {
         let s = calculateStats();
         document.getElementById('gold').innerText = Math.floor(p.gold);
-        document.getElementById('job-display').innerText = p.job;
+        document.getElementById('job-display').innerText = p.job || "-";
         document.getElementById('lvl').innerText = p.lvl;
         document.getElementById('dmg-display').innerText = s.totalDmg;
         document.getElementById('hp-display').innerText = `${Math.floor(p.hp)}/${s.totalMaxHp}`;
@@ -232,7 +229,7 @@
         document.getElementById('mob-hp').innerText = Math.floor(mob.hp);
     }
     function useHeal() { let s = calculateStats(); if(p.pots > 0) { p.pots--; p.hp = Math.min(s.totalMaxHp, p.hp + s.totalMaxHp*0.5); save(); updateUI(); } }
-    function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='shop-screen') renderShop(p.job); if(id==='bag-screen') renderInv(); }
+    function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='shop-screen') renderShop('War'); if(id==='bag-screen') renderInv(); }
     function log(m) { let l = document.getElementById('game-log'); l.innerHTML = `> ${m}<br>${l.innerHTML}`; }
     function save() { localStorage.setItem(STORAGE_KEY + p.user, JSON.stringify(p)); }
 </script>
