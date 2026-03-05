@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somalia World V15.4</title>
+    <title>Somalia World V15.6 - Full Mobs</title>
     <style>
         :root { --p-color: #a200ff; --gold: #ffd700; --bg-dark: rgba(0, 0, 0, 0.95); }
         body { background: #0b001a; color: #e0b0ff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; }
@@ -16,41 +16,38 @@
         button { background: #4b0082; color: white; border: 1px solid var(--p-color); padding: 10px; margin: 4px; cursor: pointer; width: 94%; border-radius: 8px; font-weight: bold; }
         .item-card { border: 1px solid #444; padding: 10px; margin: 5px; background: rgba(255,255,255,0.08); border-radius: 5px; text-align: left; font-size: 11px; }
         .shop-tab { display: flex; justify-content: space-around; margin-bottom: 10px; gap: 5px; }
-        .shop-tab span { cursor: pointer; padding: 8px 5px; border: 1px solid var(--p-color); border-radius: 5px; font-size: 11px; flex: 1; background: #1a1a1a; color: #ccc; }
+        .shop-tab span { cursor: pointer; padding: 8px 5px; border: 1px solid var(--p-color); border-radius: 5px; font-size: 10px; flex: 1; background: #1a1a1a; color: #ccc; }
         .active-tab { background: var(--p-color) !important; color: white !important; }
         .log { font-size: 12px; height: 100px; overflow-y: auto; color: #ccc; background: rgba(0,0,0,0.8); padding: 8px; margin-top: 10px; text-align: left; border: 1px solid #444; }
         input { padding: 12px; width: 85%; margin-bottom: 10px; border-radius: 5px; border: 1px solid var(--p-color); background: #1a1a1a; color: white; }
+        select { padding: 10px; width: 95%; background: #1a1a1a; color: gold; border: 1px solid var(--p-color); border-radius: 8px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="auth-screen" class="screen active">
-        <h1>SOMALIA WORLD V15.4</h1>
+        <h1>SOMALIA WORLD V15.6</h1>
         <input type="text" id="user" placeholder="Tên nhân vật"><br>
         <input type="password" id="pass" placeholder="Mật khẩu"><br>
         <button onclick="auth('login')">VÀO GAME</button>
         <button onclick="auth('reg')" style="background:none; border:none; color:#888; font-size:11px;">Đăng ký mới</button>
     </div>
 
-    <div id="job-screen" class="screen">
-        <h2>CHỌN NGHỀ NGHIỆP</h2>
-        <button onclick="setJob('Chiến Binh')">⚔️ CHIẾN BINH</button>
-        <button onclick="setJob('Pháp Sư')">🔮 PHÁP SƯ</button>
-    </div>
-
     <div id="game-screen" class="screen">
         <div class="stats-grid">
             <div>💰 Vàng: <span id="gold">0</span></div>
-            <div>🛡️ Nghề: <span id="job-display">-</span></div>
             <div>⚔️ Dame: <span id="dmg-display">0</span></div>
             <div>⭐ Cấp: <span id="lvl">1</span></div>
+            <div>🩸 HP: <span id="hp-num">0</span></div>
         </div>
         <div class="hp-bar"><div id="hp-fill"></div><div class="hp-text" id="hp-display">100/100</div></div>
         
-        <select id="mob-select" onchange="changeMob()" style="padding: 10px; width: 95%; background: #1a1a1a; color: gold; border: 1px solid var(--p-color); border-radius: 8px;"></select>
+        <label style="font-size: 12px; color: #aaa;">Chọn quái vật săn:</label>
+        <select id="mob-select" onchange="changeMob()"></select>
+        
         <h3 id="mob-name" style="margin:5px 0; color: #ff4d4d;">-</h3>
-        <div id="mob-hp-disp" style="font-size:12px; margin-bottom: 5px;">HP Quái: <span id="mob-hp">0</span></div>
+        <div style="font-size:12px; margin-bottom: 5px;">Máu Quái: <span id="mob-hp">0</span></div>
 
         <button onclick="attack()" style="background:#800000; height:50px;">⚔️ TẤN CÔNG</button>
         <button onclick="showScreen('shop-screen')">🛒 CỬA HÀNG</button>
@@ -62,10 +59,11 @@
     </div>
 
     <div id="shop-screen" class="screen">
-        <h2 id="shop-title">CỬA HÀNG</h2>
+        <h2>CỬA HÀNG</h2>
         <div class="shop-tab">
-            <span id="tab-Main" onclick="renderShop('Main')">TRANG BỊ NGHỀ</span>
-            <span id="tab-Acc" onclick="renderShop('Acc')">PHỤ KIỆN / ÁO LỤA</span>
+            <span id="tab-Normal" onclick="renderShop('Normal')">ĐỒ THƯỜNG</span>
+            <span id="tab-Magic" onclick="renderShop('Magic')">ĐỒ PHÉP (MẠNH)</span>
+            <span id="tab-Acc" onclick="renderShop('Acc')">PHỤ KIỆN</span>
         </div>
         <div id="shop-list" style="max-height: 350px; overflow-y: auto;"></div>
         <button onclick="showScreen('game-screen')">QUAY LẠI</button>
@@ -73,7 +71,7 @@
 
     <div id="bag-screen" class="screen">
         <h2>TÚI ĐỒ</h2>
-        <div id="inventory-list"></div>
+        <div id="inventory-list" style="max-height: 380px; overflow-y: auto;"></div>
         <button onclick="showScreen('game-screen')">QUAY LẠI</button>
     </div>
 </div>
@@ -81,53 +79,56 @@
 <script>
     const STORAGE_KEY = 'SOMALIA_V14_DATA_';
     
+    // DANH SÁCH QUÁI VẬT ĐẦY ĐỦ
     const MOBS_DATA = [
-        { name: "Slime Xanh", hp: 100, gold: 80, phan: 0.1 },
-        { name: "Vua Slime", hp: 3000, gold: 850, phan: 0.1 },
-        { name: "Lính Xương", hp: 10000, gold: 3000, phan: 0.1 },
-        { name: "Vua Xương Cổ Đại", hp: 55000, gold: 40000, phan: 0.2 },
-        { name: "Hắc Binh", hp: 2500000, gold: 180000, phan: 0.5 },
-        { name: "Hắc Sĩ (LIMIT BOSS)", hp: 6000000, gold: 600000, phan: 0.3 }
+        { name: "Slime Xanh", hp: 100, gold: 85, phan: 0.1 },
+        { name: "Vua Slime", hp: 3000, gold: 950, phan: 0.1 },
+        { name: "Lính Xương", hp: 10000, gold: 3500, phan: 0.1 },
+        { name: "Vua Xương Cổ Đại", hp: 60000, gold: 45000, phan: 0.2 },
+        { name: "Long Binh (Rồng)", hp: 350000, gold: 90000, phan: 0.2 },
+        { name: "Thủy Long (BOSS)", hp: 900000, gold: 120000, phan: 0.3 },
+        { name: "Hắc Quái", hp: 1500000, gold: 160000, phan: 0.5 },
+        { name: "Hắc Binh", hp: 3000000, gold: 250000, phan: 0.5 },
+        { name: "Hắc Sĩ (LIMIT BOSS)", hp: 8000000, gold: 900000, phan: 0.3 }
     ];
 
     const SHOP_ITEMS = [
-        // ĐỒ CHIẾN BINH
-        { id: 1, name: "⚔️ Kiếm Gỉ", price: 250, type: "tay", dmg: 60, job: "Chiến Binh" },
-        { id: 2, name: "🛡️ Giáp Vải Chiến", price: 250, type: "ao", hpBonus: 250, job: "Chiến Binh" },
-        { id: 3, name: "⚔️ Kiếm Hiệp Sĩ", price: 2500, type: "tay", dmg: 280, job: "Chiến Binh" },
-        { id: 4, name: "🛡️ Giáp Thép", price: 2500, type: "ao", hpBonus: 1200, job: "Chiến Binh" },
+        // ĐỒ THƯỜNG (Giá $250, $2500...)
+        { id: 1, name: "⚔️ Kiếm Gỉ", price: 250, type: "tay", dmg: 65, cate: "Normal" },
+        { id: 2, name: "🛡️ Giáp Vải", price: 250, type: "ao", hpBonus: 280, cate: "Normal" },
+        { id: 3, name: "⚔️ Kiếm Hiệp Sĩ", price: 2500, type: "tay", dmg: 320, cate: "Normal" },
+        { id: 4, name: "🛡️ Giáp Thép", price: 2500, type: "ao", hpBonus: 1400, cate: "Normal" },
 
-        // ĐỒ PHÁP SƯ
-        { id: 11, name: "🔮 Trượng Gỗ", price: 250, type: "tay", dmg: 70, job: "Pháp Sư" },
-        { id: 12, name: "🧥 Áo Tập Sự", price: 250, type: "ao", hpBonus: 200, job: "Pháp Sư" },
-        { id: 13, name: "🔮 Trượng Đồ Đệ", price: 2500, type: "tay", dmg: 320, job: "Pháp Sư" },
-        { id: 14, name: "🧥 Áo Ma Pháp", price: 2500, type: "ao", hpBonus: 1000, job: "Pháp Sư" },
+        // ĐỒ PHÉP (Giá x1.5, Chỉ số cực mạnh)
+        { id: 11, name: "🔮 Trượng Gỗ", price: 375, type: "tay", dmg: 120, cate: "Magic" },
+        { id: 12, name: "🧥 Áo Tập Sự", price: 375, type: "ao", hpBonus: 500, cate: "Magic" },
+        { id: 13, name: "🔮 Trượng Ma Pháp", price: 3750, type: "tay", dmg: 650, cate: "Magic" },
+        { id: 14, name: "🧥 Áo Lụa Phép", price: 3750, type: "ao", hpBonus: 2500, cate: "Magic" },
+        { id: 15, name: "🔱 Quyền Trượng King", price: 75000, type: "tay", dmg: 1800, cate: "Magic" },
 
-        // PHỤ KIỆN (Dùng chung)
-        { id: 100, name: "🧪 Bình Máu", price: 200, type: "pot", job: "All" },
-        { id: 201, name: "👘 Áo Lụa Mỏng", price: 250, type: "ao", hpBonus: 180, job: "All" },
-        { id: 202, name: "👘 Áo Lụa Hoàng Gia", price: 2500, type: "ao", hpBonus: 950, job: "All" },
-        { id: 101, name: "👟 Giày Tận Thế", price: 70000, type: "giay", hpBonus: 800, job: "All" },
-        { id: 102, name: "👖 Quần Animo", price: 70000, type: "quan", hpBonus: 800, job: "All" },
-        { id: 103, name: "💍 Nhẫn Blackhole", price: 200000, type: "nhan", hpBonus: 2000, dmgRate: 0.15, job: "All" }
+        // PHỤ KIỆN
+        { id: 100, name: "🧪 Bình Máu", price: 200, type: "pot", cate: "Acc" },
+        { id: 101, name: "👟 Giày Tốc Độ", price: 8000, type: "giay", hpBonus: 600, cate: "Acc" },
+        { id: 102, name: "👖 Quần Da Gấu", price: 8000, type: "quan", hpBonus: 600, cate: "Acc" },
+        { id: 103, name: "💍 Nhẫn Blackhole", price: 250000, type: "nhan", dmgRate: 0.2, cate: "Acc" }
     ];
 
-    let p = { user:"", pass:"", job:"", lvl:1, gold:0, gems:0, hp:300, baseMaxHp:300, baseDmg:45, pots:0, inv:[], equip:{ao:null, tay:null, non:null, giay:null, quan:null, nhan:null} };
+    let p = { user:"", pass:"", lvl:1, gold:0, hp:500, baseMaxHp:500, baseDmg:55, pots:0, inv:[], equip:{ao:null, tay:null, giay:null, quan:null, nhan:null} };
     let mob = { ...MOBS_DATA[0], maxHp: MOBS_DATA[0].hp };
 
     function auth(type) {
         let u = document.getElementById('user').value.trim();
         let ps = document.getElementById('pass').value.trim();
-        if(!u || !ps) return alert("Nhập đủ thông tin!");
+        if(!u || !ps) return alert("Vui lòng nhập đủ!");
         let saved = localStorage.getItem(STORAGE_KEY + u);
         if(type === 'reg') {
-            if(saved) return alert("Tên đã tồn tại!");
-            p.user = u; p.pass = ps; save(); alert("Đăng ký xong!"); showScreen('job-screen');
+            if(saved) return alert("Tài khoản đã tồn tại!");
+            p.user = u; p.pass = ps; save(); alert("Đăng ký thành công!"); showScreen('game-screen');
         } else {
-            if(!saved) return alert("Sai tài khoản!");
+            if(!saved) return alert("Không tìm thấy tài khoản!");
             p = JSON.parse(saved);
             if(p.pass !== ps) return alert("Sai mật khẩu!");
-            p.job ? showScreen('game-screen') : showScreen('job-screen');
+            showScreen('game-screen');
         }
         initMobSelect(); updateUI();
     }
@@ -143,12 +144,8 @@
 
     function calculateStats() {
         let bDmg = 0, bHp = 0, rDmg = 0;
-        Object.values(p.equip).forEach(e => {
-            if(e) {
-                bDmg += (e.dmg || 0); bHp += (e.hpBonus || 0); rDmg += (e.dmgRate || 0);
-            }
-        });
-        return { totalDmg: Math.floor(p.baseDmg + bDmg), totalMaxHp: Math.floor(p.baseMaxHp + bHp) };
+        Object.values(p.equip).forEach(e => { if(e) { bDmg += (e.dmg || 0); bHp += (e.hpBonus || 0); rDmg += (e.dmgRate || 0); } });
+        return { totalDmg: Math.floor((p.baseDmg + bDmg) * (1 + rDmg)), totalMaxHp: p.baseMaxHp + bHp };
     }
 
     function attack() {
@@ -158,22 +155,14 @@
         if(mob.hp <= 0) {
             p.gold += mob.gold; p.lvl++; log(`✨ Hạ ${mob.name}! +${mob.gold}$`); mob.hp = mob.maxHp;
         }
-        if(p.hp <= 0) { alert("Tử trận! Hồi máu..."); p.hp = s.totalMaxHp; mob.hp = mob.maxHp; }
+        if(p.hp <= 0) { alert("Bạn gục ngã! HP hồi lại."); p.hp = s.totalMaxHp; mob.hp = mob.maxHp; }
         save(); updateUI();
     }
 
-    function renderShop(tab) {
+    function renderShop(cate) {
         document.querySelectorAll('.shop-tab span').forEach(s => s.classList.remove('active-tab'));
-        document.getElementById('tab-' + tab).classList.add('active-tab');
-        document.getElementById('shop-title').innerText = `SHOP ${p.job.toUpperCase()}`;
-
-        let filtered = [];
-        if(tab === 'Main') {
-            filtered = SHOP_ITEMS.filter(i => i.job === p.job); // CHỈ HIỆN ĐỒ ĐÚNG NGHỀ
-        } else {
-            filtered = SHOP_ITEMS.filter(i => i.job === 'All'); // HIỆN PHỤ KIỆN VÀ ÁO LỤA
-        }
-
+        document.getElementById('tab-' + cate).classList.add('active-tab');
+        let filtered = SHOP_ITEMS.filter(i => i.cate === cate);
         document.getElementById('shop-list').innerHTML = filtered.map(itm => `
             <div class="item-card">
                 <b>${itm.name}</b><br>Giá: ${itm.price}$ | ${itm.dmg?'Dmg: '+itm.dmg:''} ${itm.hpBonus?'HP: '+itm.hpBonus:''}<br>
@@ -204,14 +193,12 @@
         save(); updateUI(); renderInv();
     }
 
-    function setJob(j) { p.job = j; save(); updateUI(); showScreen('game-screen'); }
-    
     function updateUI() {
         let s = calculateStats();
         document.getElementById('gold').innerText = Math.floor(p.gold);
-        document.getElementById('job-display').innerText = p.job || "-";
         document.getElementById('lvl').innerText = p.lvl;
         document.getElementById('dmg-display').innerText = s.totalDmg;
+        document.getElementById('hp-num').innerText = Math.floor(p.hp);
         document.getElementById('hp-display').innerText = `${Math.floor(p.hp)}/${s.totalMaxHp}`;
         document.getElementById('hp-fill').style.width = (p.hp/s.totalMaxHp*100) + "%";
         document.getElementById('pot-count').innerText = p.pots;
@@ -219,15 +206,12 @@
         document.getElementById('mob-hp').innerText = Math.floor(mob.hp);
     }
 
-    function useHeal() { 
-        let s = calculateStats(); 
-        if(p.pots > 0) { p.pots--; p.hp = Math.min(s.totalMaxHp, p.hp + s.totalMaxHp*0.5); save(); updateUI(); } 
-    }
+    function useHeal() { let s = calculateStats(); if(p.pots > 0) { p.pots--; p.hp = Math.min(s.totalMaxHp, p.hp + s.totalMaxHp*0.5); save(); updateUI(); } }
 
     function showScreen(id) { 
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        if(id==='shop-screen') renderShop('Main');
+        if(id==='shop-screen') renderShop('Normal');
         if(id==='bag-screen') renderInv();
     }
     function log(m) { let l = document.getElementById('game-log'); l.innerHTML = `> ${m}<br>${l.innerHTML}`; }
