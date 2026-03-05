@@ -3,109 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RPG Somalia Game</title>
+    <title>Somalia World: Origins</title>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; 
-               background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg');
-               background-size: cover; background-attachment: fixed; }
-        .screen { display: none; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; border: 2px solid #a200ff; max-width: 400px; margin: auto; }
+        body { background: #0b001a; color: #e0b0ff; font-family: 'Courier New', Courier, monospace; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; }
+        .container { background: rgba(0, 0, 0, 0.85); border: 2px solid #a200ff; border-radius: 15px; padding: 15px; max-width: 500px; margin: auto; position: relative; }
+        .stats-bar { position: absolute; top: 10px; left: 10px; text-align: left; font-size: 12px; color: #ffd700; }
+        .screen { display: none; }
         .active { display: block; }
-        button { background: #a200ff; color: white; border: none; padding: 10px 20px; margin: 10px; cursor: pointer; border-radius: 5px; }
-        .stat { color: #00ff41; font-weight: bold; }
-        .item { color: #ffd700; font-style: italic; }
-        #enemy-hp { color: #ff4d4d; font-size: 20px; }
+        button { background: #4b0082; color: white; border: 1px solid #a200ff; padding: 10px; margin: 5px; cursor: pointer; width: 80%; border-radius: 5px; }
+        button:hover { background: #a200ff; }
+        .hp-bar { width: 100%; height: 15px; background: #333; border-radius: 10px; overflow: hidden; margin: 10px 0; border: 1px solid #fff; }
+        #hp-fill { height: 100%; background: #ff4d4d; width: 100%; transition: 0.3s; }
+        .log { font-size: 12px; height: 60px; overflow-y: auto; color: #ccc; background: rgba(255,255,255,0.1); padding: 5px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
+<div class="container">
     <div id="auth-screen" class="screen active">
-        <h2>HỆ THỐNG SOMALIA</h2>
-        <input type="text" id="username" placeholder="Nhập tên nhân vật...">
-        <br>
-        <button onclick="login()">BẮT ĐẦU CHƠI</button>
+        <h1>SOMALIA RPG</h1>
+        <input type="text" id="user" placeholder="Tên tài khoản"><br><br>
+        <input type="password" id="pass" placeholder="Mật khẩu"><br>
+        <button onclick="auth('login')">ĐĂNG NHẬP</button>
+        <button onclick="auth('reg')">ĐĂNG KÝ MỚI</button>
+    </div>
+
+    <div id="job-screen" class="screen">
+        <h2>CHỌN NGHỀ NGHIỆP</h2>
+        <button onclick="setJob('Cận Chiến')">CẬN CHIẾN (Máu trâu)</button>
+        <button onclick="setJob('Phép Thuật')">PHÉP THUẬT (Dame to)</button>
     </div>
 
     <div id="game-screen" class="screen">
-        <h2 id="player-display">Chào, </h2>
-        <p>Sức mạnh: <span id="player-dmg" class="stat">10</span> | Trang bị: <span id="player-item" class="item">Tay không</span></p>
+        <div class="stats-bar">
+            💰 Vàng: <span id="gold">0</span><br>
+            ⭐ Cấp: <span id="lvl">1</span> (<span id="exp">0</span>/50)
+        </div>
         
+        <h3 id="player-info">Sát thủ</h3>
+        <div class="hp-bar"><div id="hp-fill"></div></div>
+        <p>Máu: <span id="hp-text">100/100</span> | Dame: <span id="dmg-text">10</span></p>
+
         <hr>
-        <h3>QUÁI THIÊN THẠCH</h3>
-        <p>Máu quái: <span id="enemy-hp">100</span>/100</p>
-        <button onclick="attack()">ĐÁNH QUÁI</button>
-        
-        <p id="log" style="font-size: 14px; color: #aaa;"></p>
-        <button onclick="logout()" style="background: #555;">ĐĂNG XUẤT</button>
+        <h2 id="mob-name">Quái Slime</h2>
+        <p>Máu quái: <span id="mob-hp">50</span></p>
+        <button onclick="attack()">ĐÁNH QUÁI (Phản dame 50%)</button>
+        <button onclick="showShop()">VÀO CỬA HÀNG</button>
+
+        <div id="game-log" class="log">Chào mừng bạn đến với Somalia!</div>
     </div>
 
-    <script>
-        let player = { name: "", dmg: 10, item: "Tay không" };
-        let enemyHP = 100;
+    <div id="shop-screen" class="screen">
+        <h2>CỬA HÀNG</h2>
+        <p>Vàng của bạn: <span id="shop-gold">0</span></p>
+        <button onclick="buy('boost')">Mua Boost (+5 Dame) - 50 Vàng</button>
+        <button onclick="buy('armor')">Mua Giáp (+50 Máu) - 80 Vàng</button>
+        <button onclick="backToGame()">QUAY LẠI</button>
+    </div>
+</div>
 
-        // Hàm Đăng nhập / Đăng ký
-        function login() {
-            const nameInput = document.getElementById('username').value;
-            if (nameInput === "") return alert("Vui lòng nhập tên!");
-            
-            // Kiểm tra xem đã có dữ liệu cũ chưa
-            let savedData = localStorage.getItem(nameInput);
-            if (savedData) {
-                player = JSON.parse(savedData);
-                alert("Chào mừng trở lại!");
-            } else {
-                player.name = nameInput;
-                saveGame();
-                alert("Tạo nhân vật mới thành công!");
-            }
-            
+<script>
+    let p = { user:"", pass:"", job:"", lvl:1, exp:0, hp:100, maxHp:100, dmg:10, gold:0, items:0 };
+    let mob = { name: "Slime", hp: 50, maxHp: 50, exp: 10, gold: 10 };
+
+    function auth(type) {
+        let u = document.getElementById('user').value;
+        let ps = document.getElementById('pass').value;
+        if(!u || !ps) return alert("Nhập đủ thông tin!");
+
+        let saved = localStorage.getItem('user_' + u);
+        if(type === 'reg') {
+            if(saved) return alert("Tên đã tồn tại!");
+            p.user = u; p.pass = ps;
+            showScreen('job-screen');
+        } else {
+            if(!saved || JSON.parse(saved).pass !== ps) return alert("Sai tk hoặc mk!");
+            p = JSON.parse(saved);
+            updateUI();
             showScreen('game-screen');
-            updateUI();
+        }
+    }
+
+    function setJob(job) {
+        p.job = job;
+        if(job === 'Cận Chiến') { p.hp = 150; p.maxHp = 150; p.dmg = 12; }
+        else { p.hp = 80; p.maxHp = 80; p.dmg = 25; }
+        save();
+        updateUI();
+        showScreen('game-screen');
+    }
+
+    function attack() {
+        // Đánh quái
+        mob.hp -= p.dmg;
+        // Phản dame 50% sát thương của mình
+        let phản = Math.floor(p.dmg * 0.5);
+        p.hp -= phản;
+
+        log(`Bạn chém ${p.dmg} dame. Quái phản ${phản} dame!`);
+
+        if(mob.hp <= 0) {
+            log(`Diệt ${mob.name}! +${mob.gold} vàng, +${mob.exp} exp`);
+            p.gold += mob.gold;
+            p.exp += mob.exp;
+            mob.hp = mob.maxHp + (p.lvl * 10); // Quái mạnh dần
+            checkLvl();
         }
 
-        // Hàm Đánh quái
-        function attack() {
-            enemyHP -= player.dmg;
-            document.getElementById('log').innerText = `Bạn gây ${player.dmg} sát thương!`;
-
-            if (enemyHP <= 0) {
-                document.getElementById('log').innerText = "Quái chết! Đang chờ quái mới...";
-                dropRate(); // Tính tỉ lệ rớt đồ
-                enemyHP = 100; // Hồi máu quái
-            }
-            updateUI();
+        if(p.hp <= 0) {
+            alert("Bạn đã tử trận! Hồi sinh mất 20% vàng.");
+            p.hp = p.maxHp;
+            p.gold = Math.floor(p.gold * 0.8);
+            mob.hp = mob.maxHp;
         }
+        save();
+        updateUI();
+    }
 
-        // Tỉ lệ rớt đồ (20% rớt Kiếm)
-        function dropRate() {
-            let random = Math.random() * 100;
-            if (random < 20) { // 20% rớt Kiếm
-                player.dmg += 5;
-                player.item = "Kiếm Thiên Thạch (+5 Dmg)";
-                alert("CỰC PHẨM! Bạn nhặt được Kiếm Thiên Thạch!");
-                saveGame();
-            }
+    function checkLvl() {
+        let need = p.lvl * 50;
+        if(p.exp >= need) {
+            p.lvl++;
+            p.exp = 0;
+            p.maxHp += 20;
+            p.hp = p.maxHp;
+            p.dmg += 5;
+            alert("LÊN CẤP! Bạn hiện tại cấp " + p.lvl);
         }
+    }
 
-        function updateUI() {
-            document.getElementById('player-display').innerText = "Sát thủ: " + player.name;
-            document.getElementById('player-dmg').innerText = player.dmg;
-            document.getElementById('player-item').innerText = player.item;
-            document.getElementById('enemy-hp').innerText = enemyHP;
+    function buy(item) {
+        if(item === 'boost' && p.gold >= 50) {
+            p.gold -= 50; p.dmg += 5; alert("Đã mua Boost!");
+        } else if(item === 'armor' && p.gold >= 80) {
+            p.gold -= 80; p.maxHp += 50; p.hp += 50; alert("Đã mua Giáp!");
+        } else {
+            alert("Không đủ tiền!");
         }
+        save();
+        updateUI();
+        showShop();
+    }
 
-        function saveGame() {
-            localStorage.setItem(player.name, JSON.stringify(player));
-        }
+    function updateUI() {
+        document.getElementById('player-info').innerText = p.user + " (" + p.job + ")";
+        document.getElementById('gold').innerText = p.gold;
+        document.getElementById('shop-gold').innerText = p.gold;
+        document.getElementById('lvl').innerText = p.lvl;
+        document.getElementById('exp').innerText = p.exp;
+        document.getElementById('hp-text').innerText = p.hp + "/" + p.maxHp;
+        document.getElementById('dmg-text').innerText = p.dmg;
+        document.getElementById('mob-hp').innerText = mob.hp;
+        let pt = (p.hp / p.maxHp) * 100;
+        document.getElementById('hp-fill').style.width = pt + "%";
+    }
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
+    function log(msg) {
+        let l = document.getElementById('game-log');
+        l.innerHTML = msg + "<br>" + l.innerHTML;
+    }
 
-        function logout() {
-            location.reload();
-        }
-    </script>
+    function save() { localStorage.setItem('user_' + p.user, JSON.stringify(p)); }
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+    function showShop() { showScreen('shop-screen'); }
+    function backToGame() { showScreen('game-screen'); }
+</script>
+
 </body>
 </html>
-
