@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somalia World V15.6 - Full Mobs</title>
+    <title>Somalia World V16.0 - Full Arsenal</title>
     <style>
         :root { --p-color: #a200ff; --gold: #ffd700; --bg-dark: rgba(0, 0, 0, 0.95); }
         body { background: #0b001a; color: #e0b0ff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; }
@@ -15,23 +15,21 @@
         .hp-text { position: absolute; width: 100%; text-align: center; font-size: 11px; line-height: 20px; color: white; text-shadow: 1px 1px black; }
         button { background: #4b0082; color: white; border: 1px solid var(--p-color); padding: 10px; margin: 4px; cursor: pointer; width: 94%; border-radius: 8px; font-weight: bold; }
         .item-card { border: 1px solid #444; padding: 10px; margin: 5px; background: rgba(255,255,255,0.08); border-radius: 5px; text-align: left; font-size: 11px; }
-        .shop-tab { display: flex; justify-content: space-around; margin-bottom: 10px; gap: 5px; }
-        .shop-tab span { cursor: pointer; padding: 8px 5px; border: 1px solid var(--p-color); border-radius: 5px; font-size: 10px; flex: 1; background: #1a1a1a; color: #ccc; }
-        .active-tab { background: var(--p-color) !important; color: white !important; }
-        .log { font-size: 12px; height: 100px; overflow-y: auto; color: #ccc; background: rgba(0,0,0,0.8); padding: 8px; margin-top: 10px; text-align: left; border: 1px solid #444; }
-        input { padding: 12px; width: 85%; margin-bottom: 10px; border-radius: 5px; border: 1px solid var(--p-color); background: #1a1a1a; color: white; }
-        select { padding: 10px; width: 95%; background: #1a1a1a; color: gold; border: 1px solid var(--p-color); border-radius: 8px; margin-bottom: 10px; }
+        .vip-item { border: 2px solid; border-image: linear-gradient(45deg, #ff0000, #ff00ff, #00ffff, #fff700) 1; animation: rainbow-glow 2s infinite linear; }
+        @keyframes rainbow-glow { 0% { filter: hue-rotate(0deg); box-shadow: 0 0 5px #ff0000; } 50% { box-shadow: 0 0 15px #00ffff; } 100% { filter: hue-rotate(360deg); box-shadow: 0 0 5px #ff0000; } }
+        .log { font-size: 11px; height: 100px; overflow-y: auto; color: #ccc; background: rgba(0,0,0,0.8); padding: 8px; margin-top: 10px; text-align: left; border: 1px solid #444; }
+        select { padding: 12px; width: 95%; background: #1a1a1a; color: gold; border: 1px solid var(--p-color); border-radius: 8px; margin-bottom: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="auth-screen" class="screen active">
-        <h1>SOMALIA WORLD V15.6</h1>
-        <input type="text" id="user" placeholder="Tên nhân vật"><br>
-        <input type="password" id="pass" placeholder="Mật khẩu"><br>
+        <h1>SOMALIA WORLD V16.0</h1>
+        <input type="text" id="user" placeholder="Tên nhân vật" style="padding:10px; width:80%; margin:5px;"><br>
+        <input type="password" id="pass" placeholder="Mật khẩu" style="padding:10px; width:80%; margin:5px;"><br>
         <button onclick="auth('login')">VÀO GAME</button>
-        <button onclick="auth('reg')" style="background:none; border:none; color:#888; font-size:11px;">Đăng ký mới</button>
+        <button onclick="auth('reg')" style="background:none; border:none; color:#888; font-size:11px;">Đăng ký</button>
     </div>
 
     <div id="game-screen" class="screen">
@@ -43,9 +41,7 @@
         </div>
         <div class="hp-bar"><div id="hp-fill"></div><div class="hp-text" id="hp-display">100/100</div></div>
         
-        <label style="font-size: 12px; color: #aaa;">Chọn quái vật săn:</label>
         <select id="mob-select" onchange="changeMob()"></select>
-        
         <h3 id="mob-name" style="margin:5px 0; color: #ff4d4d;">-</h3>
         <div style="font-size:12px; margin-bottom: 5px;">Máu Quái: <span id="mob-hp">0</span></div>
 
@@ -59,19 +55,14 @@
     </div>
 
     <div id="shop-screen" class="screen">
-        <h2>CỬA HÀNG</h2>
-        <div class="shop-tab">
-            <span id="tab-Normal" onclick="renderShop('Normal')">ĐỒ THƯỜNG</span>
-            <span id="tab-Magic" onclick="renderShop('Magic')">ĐỒ PHÉP (MẠNH)</span>
-            <span id="tab-Acc" onclick="renderShop('Acc')">PHỤ KIỆN</span>
-        </div>
-        <div id="shop-list" style="max-height: 350px; overflow-y: auto;"></div>
+        <h2>CỬA HÀNG TỔNG</h2>
+        <div id="shop-list" style="max-height: 400px; overflow-y: auto;"></div>
         <button onclick="showScreen('game-screen')">QUAY LẠI</button>
     </div>
 
     <div id="bag-screen" class="screen">
         <h2>TÚI ĐỒ</h2>
-        <div id="inventory-list" style="max-height: 380px; overflow-y: auto;"></div>
+        <div id="inventory-list" style="max-height: 400px; overflow-y: auto;"></div>
         <button onclick="showScreen('game-screen')">QUAY LẠI</button>
     </div>
 </div>
@@ -79,55 +70,48 @@
 <script>
     const STORAGE_KEY = 'SOMALIA_V14_DATA_';
     
-    // DANH SÁCH QUÁI VẬT ĐẦY ĐỦ
     const MOBS_DATA = [
-        { name: "Slime Xanh", hp: 100, gold: 85, phan: 0.1 },
-        { name: "Vua Slime", hp: 3000, gold: 950, phan: 0.1 },
-        { name: "Lính Xương", hp: 10000, gold: 3500, phan: 0.1 },
-        { name: "Vua Xương Cổ Đại", hp: 60000, gold: 45000, phan: 0.2 },
-        { name: "Long Binh (Rồng)", hp: 350000, gold: 90000, phan: 0.2 },
-        { name: "Thủy Long (BOSS)", hp: 900000, gold: 120000, phan: 0.3 },
-        { name: "Hắc Quái", hp: 1500000, gold: 160000, phan: 0.5 },
-        { name: "Hắc Binh", hp: 3000000, gold: 250000, phan: 0.5 },
-        { name: "Hắc Sĩ (LIMIT BOSS)", hp: 8000000, gold: 900000, phan: 0.3 }
+        { name: "Slime Xanh", hp: 100, gold: 120, phan: 0.1 },
+        { name: "Vua Slime", hp: 5000, gold: 1500, phan: 0.1 },
+        { name: "Lính Xương", hp: 20000, gold: 6000, phan: 0.1 },
+        { name: "Vua Xương Cổ Đại", hp: 100000, gold: 35000, phan: 0.2 },
+        { name: "Long Binh", hp: 450000, gold: 100000, phan: 0.2 },
+        { name: "Thủy Long (BOSS)", hp: 1200000, gold: 200000, phan: 0.3 },
+        { name: "Hắc Binh", hp: 5000000, gold: 500000, phan: 0.5 },
+        { name: "Hắc Sĩ (ĐẠI BOSS)", hp: 12000000, gold: 1500000, phan: 0.3 }
     ];
 
     const SHOP_ITEMS = [
-        // ĐỒ THƯỜNG (Giá $250, $2500...)
-        { id: 1, name: "⚔️ Kiếm Gỉ", price: 250, type: "tay", dmg: 65, cate: "Normal" },
-        { id: 2, name: "🛡️ Giáp Vải", price: 250, type: "ao", hpBonus: 280, cate: "Normal" },
-        { id: 3, name: "⚔️ Kiếm Hiệp Sĩ", price: 2500, type: "tay", dmg: 320, cate: "Normal" },
-        { id: 4, name: "🛡️ Giáp Thép", price: 2500, type: "ao", hpBonus: 1400, cate: "Normal" },
-
-        // ĐỒ PHÉP (Giá x1.5, Chỉ số cực mạnh)
-        { id: 11, name: "🔮 Trượng Gỗ", price: 375, type: "tay", dmg: 120, cate: "Magic" },
-        { id: 12, name: "🧥 Áo Tập Sự", price: 375, type: "ao", hpBonus: 500, cate: "Magic" },
-        { id: 13, name: "🔮 Trượng Ma Pháp", price: 3750, type: "tay", dmg: 650, cate: "Magic" },
-        { id: 14, name: "🧥 Áo Lụa Phép", price: 3750, type: "ao", hpBonus: 2500, cate: "Magic" },
-        { id: 15, name: "🔱 Quyền Trượng King", price: 75000, type: "tay", dmg: 1800, cate: "Magic" },
-
-        // PHỤ KIỆN
-        { id: 100, name: "🧪 Bình Máu", price: 200, type: "pot", cate: "Acc" },
-        { id: 101, name: "👟 Giày Tốc Độ", price: 8000, type: "giay", hpBonus: 600, cate: "Acc" },
-        { id: 102, name: "👖 Quần Da Gấu", price: 8000, type: "quan", hpBonus: 600, cate: "Acc" },
-        { id: 103, name: "💍 Nhẫn Blackhole", price: 250000, type: "nhan", dmgRate: 0.2, cate: "Acc" }
+        // KIẾM & TRƯỢNG
+        { id: 1, name: "⚔️ Kiếm Hỏa Lực", price: 30000, type: "tay_chinh", dmg: 1500 },
+        { id: 13, name: "🔮 Trượng Ma Pháp", price: 3750, type: "tay_chinh", dmg: 650 },
+        { id: 15, name: "🔱 Quyền Trượng King", price: 75000, type: "tay_chinh", dmg: 1800 },
+        
+        // DAGGER ĐẶC BIỆT
+        { id: 2, name: "🗡️ Dagger Đặc Biệt", price: 50000, type: "tay_phu", dmg: 7999, dmgLvl: 9, isVip: true },
+        
+        // GIÁP & PHỤ KIỆN
+        { id: 3, name: "👑 Vương Miện Thánh", price: "50%", minGold: 1000000, type: "non", dmg: 5000, dmgLvl: 20, isVip: true },
+        { id: 4, name: "🛡️ Giáp Thép", price: 2500, type: "ao", hpBonus: 1500 },
+        { id: 14, name: "🧥 Áo Lụa Phép", price: 3750, type: "ao", hpBonus: 2500 },
+        { id: 5, name: "💍 Nhẫn Long", price: 100000, type: "nhan", hpBonus: 2000, hpRate: 0.05, dmgRate: 0.05 },
+        { id: 6, name: "🧪 Bình Máu", price: 200, type: "pot" }
     ];
 
-    let p = { user:"", pass:"", lvl:1, gold:0, hp:500, baseMaxHp:500, baseDmg:55, pots:0, inv:[], equip:{ao:null, tay:null, giay:null, quan:null, nhan:null} };
+    let p = { user:"", pass:"", lvl:1, gold:0, hp:500, baseMaxHp:500, baseDmg:50, pots:0, inv:[], equip:{ao:null, tay_chinh:null, tay_phu:null, non:null, nhan:null} };
     let mob = { ...MOBS_DATA[0], maxHp: MOBS_DATA[0].hp };
 
     function auth(type) {
         let u = document.getElementById('user').value.trim();
         let ps = document.getElementById('pass').value.trim();
-        if(!u || !ps) return alert("Vui lòng nhập đủ!");
+        if(!u || !ps) return alert("Nhập đủ!");
         let saved = localStorage.getItem(STORAGE_KEY + u);
         if(type === 'reg') {
-            if(saved) return alert("Tài khoản đã tồn tại!");
-            p.user = u; p.pass = ps; save(); alert("Đăng ký thành công!"); showScreen('game-screen');
+            if(saved) return alert("Tên đã tồn tại!");
+            p.user = u; p.pass = ps; save(); alert("Đã đăng ký!"); showScreen('game-screen');
         } else {
-            if(!saved) return alert("Không tìm thấy tài khoản!");
+            if(!saved) return alert("Ko thấy nick!");
             p = JSON.parse(saved);
-            if(p.pass !== ps) return alert("Sai mật khẩu!");
             showScreen('game-screen');
         }
         initMobSelect(); updateUI();
@@ -143,29 +127,35 @@
     }
 
     function calculateStats() {
-        let bDmg = 0, bHp = 0, rDmg = 0;
-        Object.values(p.equip).forEach(e => { if(e) { bDmg += (e.dmg || 0); bHp += (e.hpBonus || 0); rDmg += (e.dmgRate || 0); } });
-        return { totalDmg: Math.floor((p.baseDmg + bDmg) * (1 + rDmg)), totalMaxHp: p.baseMaxHp + bHp };
+        let bDmg = 0, bHp = 0, rDmg = 0, rHp = 0;
+        Object.keys(p.equip).forEach(slot => {
+            let e = p.equip[slot];
+            if(e) {
+                let currentDmg = (e.dmg || 0) + ((e.dmgLvl || 0) * p.lvl);
+                if (slot === 'tay_phu' && p.equip.tay_chinh) { currentDmg *= 0.5; }
+                bDmg += currentDmg;
+                bHp += (e.hpBonus || 0);
+                rDmg += (e.dmgRate || 0);
+                rHp += (e.hpRate || 0);
+            }
+        });
+        return { totalDmg: Math.floor((p.baseDmg + bDmg) * (1 + rDmg)), totalMaxHp: Math.floor((p.baseMaxHp + bHp) * (1 + rHp)) };
     }
 
     function attack() {
         let s = calculateStats(); let phan = Math.floor(s.totalDmg * (mob.phan || 0.1));
         mob.hp -= s.totalDmg; p.hp -= phan;
-        log(`⚔️ Bạn gây -${s.totalDmg}. Bị phản -${phan}.`);
-        if(mob.hp <= 0) {
-            p.gold += mob.gold; p.lvl++; log(`✨ Hạ ${mob.name}! +${mob.gold}$`); mob.hp = mob.maxHp;
-        }
-        if(p.hp <= 0) { alert("Bạn gục ngã! HP hồi lại."); p.hp = s.totalMaxHp; mob.hp = mob.maxHp; }
+        log(`⚔️ Gây -${s.totalDmg}. Phản -${phan}.`);
+        if(mob.hp <= 0) { p.gold += mob.gold; p.lvl++; mob.hp = mob.maxHp; log(`✨ Hạ gục! +${mob.gold}$`); }
+        if(p.hp <= 0) { p.hp = s.totalMaxHp; mob.hp = mob.maxHp; alert("Gục ngã!"); }
         save(); updateUI();
     }
 
-    function renderShop(cate) {
-        document.querySelectorAll('.shop-tab span').forEach(s => s.classList.remove('active-tab'));
-        document.getElementById('tab-' + cate).classList.add('active-tab');
-        let filtered = SHOP_ITEMS.filter(i => i.cate === cate);
-        document.getElementById('shop-list').innerHTML = filtered.map(itm => `
-            <div class="item-card">
-                <b>${itm.name}</b><br>Giá: ${itm.price}$ | ${itm.dmg?'Dmg: '+itm.dmg:''} ${itm.hpBonus?'HP: '+itm.hpBonus:''}<br>
+    function renderShop() {
+        document.getElementById('shop-list').innerHTML = SHOP_ITEMS.map(itm => `
+            <div class="item-card ${itm.isVip ? 'vip-item' : ''}">
+                <b>${itm.name}</b><br>Giá: ${itm.price === "50%" ? "50% Vàng" : itm.price + "$"}<br>
+                ${itm.dmg ? 'Dame: '+itm.dmg : ''} ${itm.hpBonus ? 'HP: '+itm.hpBonus : ''}<br>
                 <button onclick="buy(${itm.id})" style="float:right">MUA</button>
             </div>
         `).join('');
@@ -173,18 +163,21 @@
 
     function buy(id) {
         let itm = SHOP_ITEMS.find(i => i.id === id);
-        if(p.gold >= itm.price) {
-            p.gold -= itm.price;
+        let cost = itm.price === "50%" ? Math.floor(p.gold * 0.5) : itm.price;
+        if(p.gold >= cost) {
+            p.gold -= cost;
             if(itm.type === 'pot') p.pots++; else p.inv.push({...itm, uid: Date.now()});
-            save(); updateUI(); alert("Đã mua thành công!");
-        } else alert("Bạn không đủ vàng!");
+            save(); updateUI(); alert("Mua thành công!");
+        } else alert("Thiếu vàng!");
     }
 
     function renderInv() {
         document.getElementById('inventory-list').innerHTML = p.inv.map(itm => {
             let isEq = Object.values(p.equip).some(e => e && e.uid === itm.uid);
-            return `<div class="item-card">${itm.name} <button onclick="equip(${itm.uid})" style="float:right">${isEq?'THÁO':'MẶC'}</button></div>`;
-        }).join('') || "Túi đồ trống";
+            return `<div class="item-card ${itm.isVip ? 'vip-item' : ''}">
+                ${itm.name} <button onclick="equip(${itm.uid})" style="float:right">${isEq?'THÁO':'MẶC'}</button>
+            </div>`;
+        }).join('') || "Trống";
     }
 
     function equip(uid) {
@@ -207,11 +200,10 @@
     }
 
     function useHeal() { let s = calculateStats(); if(p.pots > 0) { p.pots--; p.hp = Math.min(s.totalMaxHp, p.hp + s.totalMaxHp*0.5); save(); updateUI(); } }
-
     function showScreen(id) { 
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        if(id==='shop-screen') renderShop('Normal');
+        if(id==='shop-screen') renderShop();
         if(id==='bag-screen') renderInv();
     }
     function log(m) { let l = document.getElementById('game-log'); l.innerHTML = `> ${m}<br>${l.innerHTML}`; }
