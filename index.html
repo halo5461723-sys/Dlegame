@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somalia World: Origins</title>
+    <title>Somalia World V6: Special Bonus</title>
     <style>
-        body { background: #0b001a; color: #e0b0ff; font-family: 'Courier New', Courier, monospace; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; }
-        .container { background: rgba(0, 0, 0, 0.85); border: 2px solid #a200ff; border-radius: 15px; padding: 15px; max-width: 500px; margin: auto; position: relative; }
-        .stats-bar { position: absolute; top: 10px; left: 10px; text-align: left; font-size: 12px; color: #ffd700; }
+        body { background: #0b001a; color: #e0b0ff; font-family: sans-serif; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; }
+        .container { background: rgba(0, 0, 0, 0.9); border: 2px solid #a200ff; border-radius: 15px; padding: 15px; max-width: 500px; margin: auto; box-shadow: 0 0 20px #a200ff; }
         .screen { display: none; }
         .active { display: block; }
-        button { background: #4b0082; color: white; border: 1px solid #a200ff; padding: 10px; margin: 5px; cursor: pointer; width: 80%; border-radius: 5px; }
-        button:hover { background: #a200ff; }
-        .hp-bar { width: 100%; height: 15px; background: #333; border-radius: 10px; overflow: hidden; margin: 10px 0; border: 1px solid #fff; }
-        #hp-fill { height: 100%; background: #ff4d4d; width: 100%; transition: 0.3s; }
-        .log { font-size: 12px; height: 60px; overflow-y: auto; color: #ccc; background: rgba(255,255,255,0.1); padding: 5px; margin-top: 10px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; text-align: left; font-size: 14px; color: #ffd700; margin-bottom: 10px; padding: 10px; border-bottom: 1px dashed #a200ff; }
+        button { background: #4b0082; color: white; border: 1px solid #a200ff; padding: 12px; margin: 5px; cursor: pointer; width: 90%; border-radius: 8px; font-weight: bold; }
+        .item-card { border: 1px solid #555; padding: 10px; margin: 8px; font-size: 13px; background: rgba(255,255,255,0.05); border-radius: 5px; text-align: left; }
+        .hp-bar { width: 100%; height: 20px; background: #333; border-radius: 10px; overflow: hidden; margin: 10px 0; border: 1px solid #fff; }
+        #hp-fill { height: 100%; background: linear-gradient(90deg, #ff4d4d, #ff9494); width: 100%; transition: 0.3s; }
+        .log { font-size: 12px; height: 80px; overflow-y: auto; color: #ccc; background: rgba(0,0,0,0.5); padding: 8px; margin-top: 10px; border-radius: 5px; text-align: left; }
+        input { padding: 10px; width: 80%; margin-bottom: 10px; border-radius: 5px; border: 1px solid #a200ff; background: #1a1a1a; color: white; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="auth-screen" class="screen active">
-        <h1>SOMALIA RPG</h1>
-        <input type="text" id="user" placeholder="Tên tài khoản"><br><br>
+        <h1>SOMALIA RPG V6</h1>
+        <input type="text" id="user" placeholder="Tên tài khoản"><br>
         <input type="password" id="pass" placeholder="Mật khẩu"><br>
         <button onclick="auth('login')">ĐĂNG NHẬP</button>
         <button onclick="auth('reg')">ĐĂNG KÝ MỚI</button>
@@ -30,147 +31,181 @@
 
     <div id="job-screen" class="screen">
         <h2>CHỌN NGHỀ NGHIỆP</h2>
-        <button onclick="setJob('Cận Chiến')">CẬN CHIẾN (Máu trâu)</button>
-        <button onclick="setJob('Phép Thuật')">PHÉP THUẬT (Dame to)</button>
+        <button onclick="setJob('Cận Chiến')">CẬN CHIẾN</button>
+        <button onclick="setJob('Phép Thuật')">PHÉP THUẬT</button>
     </div>
 
     <div id="game-screen" class="screen">
-        <div class="stats-bar">
-            💰 Vàng: <span id="gold">0</span><br>
-            ⭐ Cấp: <span id="lvl">1</span> (<span id="exp">0</span>/50)
+        <div class="stats-grid">
+            <div>💰 Vàng: <span id="gold">0</span>$</div>
+            <div>⭐ Cấp: <span id="lvl">1</span></div>
+            <div>⚔️ Dame: <span id="dmg-display">10</span></div>
+            <div>❤️ Máu: <span id="hp-display">100/100</span></div>
         </div>
-        
-        <h3 id="player-info">Sát thủ</h3>
         <div class="hp-bar"><div id="hp-fill"></div></div>
-        <p>Máu: <span id="hp-text">100/100</span> | Dame: <span id="dmg-text">10</span></p>
-
-        <hr>
-        <h2 id="mob-name">Quái Slime</h2>
-        <p>Máu quái: <span id="mob-hp">50</span></p>
-        <button onclick="attack()">ĐÁNH QUÁI (Phản dame 50%)</button>
-        <button onclick="showShop()">VÀO CỬA HÀNG</button>
-
-        <div id="game-log" class="log">Chào mừng bạn đến với Somalia!</div>
+        <h2 id="mob-name" style="color: #ff4d4d;">Quái Slime</h2>
+        <p>HP Quái: <span id="mob-hp">50</span></p>
+        <button onclick="attack()">⚔️ TẤN CÔNG</button>
+        <div style="display: flex; justify-content: space-around;">
+            <button onclick="showScreen('shop-screen')" style="width: 45%;">🛒 SHOP</button>
+            <button onclick="showScreen('bag-screen')" style="width: 45%;">🎒 BALO</button>
+        </div>
+        <div id="game-log" class="log"></div>
     </div>
 
     <div id="shop-screen" class="screen">
         <h2>CỬA HÀNG</h2>
-        <p>Vàng của bạn: <span id="shop-gold">0</span></p>
-        <button onclick="buy('boost')">Mua Boost (+5 Dame) - 50 Vàng</button>
-        <button onclick="buy('armor')">Mua Giáp (+50 Máu) - 80 Vàng</button>
-        <button onclick="backToGame()">QUAY LẠI</button>
+        <p>Vàng: <span id="shop-gold">0</span>$</p>
+        <div id="shop-list"></div>
+        <button onclick="showScreen('game-screen')">QUAY LẠI</button>
+    </div>
+
+    <div id="bag-screen" class="screen">
+        <h2>BALO ĐỒ</h2>
+        <div id="inventory-list"></div>
+        <button onclick="showScreen('game-screen')">QUAY LẠI</button>
     </div>
 </div>
 
 <script>
-    let p = { user:"", pass:"", job:"", lvl:1, exp:0, hp:100, maxHp:100, dmg:10, gold:0, items:0 };
-    let mob = { name: "Slime", hp: 50, maxHp: 50, exp: 10, gold: 10 };
+    const MOBS_DATA = [
+        { name: "Slime", hp: 100, gold: 10 },
+        { name: "King Slime", hp: 200, gold: 50 },
+        { name: "Người Xương", hp: 500, gold: 1000 },
+        { name: "Vua Xương", hp: 2000, gold: 3000 },
+        { name: "Vua Xương Cổ Đại (BOSS)", hp: 10000, gold: 7000, special: "10percent" }
+    ];
+
+    const SHOP_ITEMS = [
+        { id: 1, name: "Áo choàng bình thường", price: 100, type: "ao", hpBonus: 25 },
+        { id: 2, name: "Găng tay da", price: 250, type: "tay", dmg: 20, dmgLvl: 2, job: "Cận Chiến" },
+        { id: 3, name: "Trượng ma pháp cũ", price: 250, type: "tay", dmg: 25, dmgLvl: 2.5, job: "Phép Thuật" },
+        { id: 4, name: "Áo choàng hoàng tử", price: 20000, type: "ao", hpBonus: 120, hpLvl: 2 },
+        { id: 5, name: "Găng tay kỵ sĩ", price: 2500, type: "tay", dmg: 200, dmgLvl: 4, job: "Cận Chiến" },
+        { id: 6, name: "Trượng ma thuật sư", price: 2500, type: "tay", dmg: 300, dmgLvl: 4, job: "Phép Thuật" }
+    ];
+
+    let p = { user:"", pass:"", job:"", lvl:1, gold:0, hp:100, baseMaxHp:100, baseDmg:10, inv:[], equip:{ao:null, tay:null} };
+    let curMobIdx = 0;
+    let mob = { ...MOBS_DATA[0], maxHp: MOBS_DATA[0].hp };
 
     function auth(type) {
         let u = document.getElementById('user').value;
         let ps = document.getElementById('pass').value;
-        if(!u || !ps) return alert("Nhập đủ thông tin!");
-
-        let saved = localStorage.getItem('user_' + u);
+        let saved = localStorage.getItem('somalia_v6_' + u);
         if(type === 'reg') {
-            if(saved) return alert("Tên đã tồn tại!");
-            p.user = u; p.pass = ps;
-            showScreen('job-screen');
+            if(saved) return alert("Tên tồn tại!");
+            p.user = u; p.pass = ps; save(); showScreen('job-screen');
         } else {
-            if(!saved || JSON.parse(saved).pass !== ps) return alert("Sai tk hoặc mk!");
-            p = JSON.parse(saved);
-            updateUI();
-            showScreen('game-screen');
+            if(!saved || JSON.parse(saved).pass !== ps) return alert("Sai tài khoản!");
+            p = {...p, ...JSON.parse(saved)};
+            p.job ? showScreen('game-screen') : showScreen('job-screen');
         }
+        updateUI();
     }
 
     function setJob(job) {
         p.job = job;
-        if(job === 'Cận Chiến') { p.hp = 150; p.maxHp = 150; p.dmg = 12; }
-        else { p.hp = 80; p.maxHp = 80; p.dmg = 25; }
-        save();
-        updateUI();
-        showScreen('game-screen');
+        if(job === 'Cận Chiến') { p.baseMaxHp = 150; p.hp = 150; p.baseDmg = 15; }
+        else { p.baseMaxHp = 100; p.hp = 100; p.baseDmg = 25; }
+        save(); updateUI(); showScreen('game-screen');
+    }
+
+    function calculateStats() {
+        let maxHp = p.baseMaxHp;
+        let dmg = p.baseDmg;
+
+        if(p.equip.ao) {
+            maxHp += p.equip.ao.hpBonus || 0;
+            if(p.equip.ao.hpLvl) maxHp += p.equip.ao.hpLvl * p.lvl;
+        }
+        if(p.equip.tay) {
+            dmg += p.equip.tay.dmg || 0;
+            if(p.equip.tay.dmgLvl) dmg += p.equip.tay.dmgLvl * p.lvl;
+        }
+        return { maxHp, dmg };
     }
 
     function attack() {
-        // Đánh quái
-        mob.hp -= p.dmg;
-        // Phản dame 50% sát thương của mình
-        let phản = Math.floor(p.dmg * 0.5);
-        p.hp -= phản;
+        let stats = calculateStats();
+        let dmgToMob = (mob.special === "10percent") ? mob.maxHp * 0.1 : stats.dmg;
+        let phan = Math.floor(dmgToMob * 0.1);
 
-        log(`Bạn chém ${p.dmg} dame. Quái phản ${phản} dame!`);
+        mob.hp -= dmgToMob;
+        p.hp -= phan;
+        log(`Đánh: -${dmgToMob} | Phản: -${phan}`);
 
         if(mob.hp <= 0) {
-            log(`Diệt ${mob.name}! +${mob.gold} vàng, +${mob.exp} exp`);
-            p.gold += mob.gold;
-            p.exp += mob.exp;
-            mob.hp = mob.maxHp + (p.lvl * 10); // Quái mạnh dần
-            checkLvl();
+            p.gold += mob.gold; p.lvl++;
+            log(`DIỆT ${mob.name}! +${mob.gold}$ | UP LV ${p.lvl}`);
+            curMobIdx = (curMobIdx + 1) % MOBS_DATA.length;
+            mob = { ...MOBS_DATA[curMobIdx], maxHp: MOBS_DATA[curMobIdx].hp };
+            p.hp = calculateStats().maxHp; // Hồi máu
         }
 
         if(p.hp <= 0) {
-            alert("Bạn đã tử trận! Hồi sinh mất 20% vàng.");
-            p.hp = p.maxHp;
-            p.gold = Math.floor(p.gold * 0.8);
-            mob.hp = mob.maxHp;
+            alert("Tử trận!"); p.gold = Math.floor(p.gold * 0.9);
+            p.hp = stats.maxHp; mob.hp = mob.maxHp;
         }
-        save();
-        updateUI();
+        save(); updateUI();
     }
 
-    function checkLvl() {
-        let need = p.lvl * 50;
-        if(p.exp >= need) {
-            p.lvl++;
-            p.exp = 0;
-            p.maxHp += 20;
-            p.hp = p.maxHp;
-            p.dmg += 5;
-            alert("LÊN CẤP! Bạn hiện tại cấp " + p.lvl);
-        }
+    function renderShop() {
+        let html = "";
+        SHOP_ITEMS.forEach(itm => {
+            let owned = p.inv.find(i => i.id === itm.id);
+            let jobOk = !itm.job || itm.job === p.job;
+            html += `<div class="item-card">
+                <b>${itm.name}</b><br>
+                ${itm.hpBonus ? `+${itm.hpBonus} HP ` : ""}${itm.hpLvl ? `(+${itm.hpLvl}/Lv)` : ""}
+                ${itm.dmg ? `+${itm.dmg} Dame ` : ""}${itm.dmgLvl ? `(+${itm.dmgLvl}/Lv)` : ""}<br>
+                Giá: ${itm.price}$ <button onclick="buy(${itm.id})" ${owned || !jobOk ? "disabled" : ""}>Mua</button>
+            </div>`;
+        });
+        document.getElementById('shop-list').innerHTML = html;
     }
 
-    function buy(item) {
-        if(item === 'boost' && p.gold >= 50) {
-            p.gold -= 50; p.dmg += 5; alert("Đã mua Boost!");
-        } else if(item === 'armor' && p.gold >= 80) {
-            p.gold -= 80; p.maxHp += 50; p.hp += 50; alert("Đã mua Giáp!");
-        } else {
-            alert("Không đủ tiền!");
-        }
-        save();
-        updateUI();
-        showShop();
+    function buy(id) {
+        let itm = SHOP_ITEMS.find(i => i.id === id);
+        if(p.gold >= itm.price) { p.gold -= itm.price; p.inv.push(itm); save(); updateUI(); renderShop(); }
+    }
+
+    function renderInv() {
+        let html = "";
+        p.inv.forEach(itm => {
+            let isEq = (p.equip.ao?.id === itm.id || p.equip.tay?.id === itm.id);
+            html += `<div class="item-card">${itm.name} <button onclick="equip(${itm.id})">${isEq ? "Tháo" : "Mặc"}</button></div>`;
+        });
+        document.getElementById('inventory-list').innerHTML = html || "Trống";
+    }
+
+    function equip(id) {
+        let itm = p.inv.find(i => i.id === id);
+        if(p.equip[itm.type]?.id === itm.id) p.equip[itm.type] = null;
+        else p.equip[itm.type] = itm;
+        save(); updateUI(); renderInv();
     }
 
     function updateUI() {
-        document.getElementById('player-info').innerText = p.user + " (" + p.job + ")";
+        let stats = calculateStats();
         document.getElementById('gold').innerText = p.gold;
         document.getElementById('shop-gold').innerText = p.gold;
         document.getElementById('lvl').innerText = p.lvl;
-        document.getElementById('exp').innerText = p.exp;
-        document.getElementById('hp-text').innerText = p.hp + "/" + p.maxHp;
-        document.getElementById('dmg-text').innerText = p.dmg;
-        document.getElementById('mob-hp').innerText = mob.hp;
-        let pt = (p.hp / p.maxHp) * 100;
-        document.getElementById('hp-fill').style.width = pt + "%";
+        document.getElementById('dmg-display').innerText = Math.floor(stats.dmg);
+        document.getElementById('hp-display').innerText = `${Math.floor(p.hp)}/${Math.floor(stats.maxHp)}`;
+        document.getElementById('hp-fill').style.width = (p.hp / stats.maxHp * 100) + "%";
+        document.getElementById('mob-name').innerText = mob.name;
+        document.getElementById('mob-hp').innerText = Math.floor(mob.hp);
     }
 
-    function log(msg) {
-        let l = document.getElementById('game-log');
-        l.innerHTML = msg + "<br>" + l.innerHTML;
-    }
-
-    function save() { localStorage.setItem('user_' + p.user, JSON.stringify(p)); }
-    function showScreen(id) {
+    function log(m) { let l = document.getElementById('game-log'); l.innerHTML = `> ${m}<br>${l.innerHTML}`; }
+    function save() { localStorage.setItem('somalia_v6_' + p.user, JSON.stringify(p)); }
+    function showScreen(id) { 
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        if(id === 'shop-screen') renderShop();
+        if(id === 'bag-screen') renderInv();
     }
-    function showShop() { showScreen('shop-screen'); }
-    function backToGame() { showScreen('game-screen'); }
 </script>
-
 </body>
 </html>
