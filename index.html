@@ -3,43 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somalia World V9: Championship Edition</title>
+    <title>Somalia World V9.1 - Final Edition</title>
     <style>
-        :root { --p-color: #a200ff; --gold: #ffd700; }
+        :root { --p-color: #a200ff; --gold: #ffd700; --bg-dark: rgba(0, 0, 0, 0.9); }
         body { background: #0b001a; color: #e0b0ff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; overflow-x: hidden; }
-        .container { background: rgba(0, 0, 0, 0.9); border: 2px solid var(--p-color); border-radius: 15px; padding: 15px; max-width: 500px; margin: auto; box-shadow: 0 0 20px var(--p-color); position: relative; }
+        .container { background: var(--bg-dark); border: 2px solid var(--p-color); border-radius: 15px; padding: 15px; max-width: 500px; margin: auto; box-shadow: 0 0 20px var(--p-color); position: relative; }
         .screen { display: none; }
         .active { display: block; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; text-align: left; font-size: 14px; color: var(--gold); margin-bottom: 10px; padding: 10px; border-bottom: 1px dashed var(--p-color); }
         button { background: #4b0082; color: white; border: 1px solid var(--p-color); padding: 12px; margin: 5px; cursor: pointer; width: 90%; border-radius: 8px; font-weight: bold; transition: 0.2s; }
         button:active { transform: scale(0.95); background: var(--p-color); }
-        .item-card { border: 1px solid #555; padding: 10px; margin: 8px; font-size: 13px; background: rgba(255,255,255,0.05); border-radius: 5px; text-align: left; position: relative; }
+        button:disabled { background: #222; border-color: #444; color: #666; }
+        .item-card { border: 1px solid #555; padding: 10px; margin: 8px; font-size: 13px; background: rgba(255,255,255,0.05); border-radius: 5px; text-align: left; overflow: hidden; }
         .hp-bar { width: 100%; height: 22px; background: #333; border-radius: 11px; overflow: hidden; margin: 10px 0; border: 1.5px solid #fff; position: relative; }
         #hp-fill { height: 100%; background: linear-gradient(90deg, #ff4d4d, #ff9494); width: 100%; transition: 0.3s; }
         .hp-text-overlay { position: absolute; width: 100%; text-align: center; font-size: 12px; font-weight: bold; color: white; line-height: 22px; text-shadow: 1px 1px 2px black; }
         .log { font-size: 12px; height: 110px; overflow-y: auto; color: #ccc; background: rgba(0,0,0,0.6); padding: 8px; margin-top: 10px; border-radius: 5px; text-align: left; border: 1px solid #444; }
         select { padding: 10px; width: 90%; background: #1a1a1a; color: var(--gold); border: 1px solid var(--p-color); border-radius: 8px; margin-bottom: 10px; font-weight: bold; }
-        .shake { animation: shake 0.3s; }
-        @keyframes shake { 0% { transform: translate(1px, 1px); } 20% { transform: translate(-3px, 0); } 40% { transform: translate(3px, 2px); } 60% { transform: translate(-1px, -1px); } 80% { transform: translate(-3px, 1px); } 100% { transform: translate(0, 0); } }
-        .btn-heal { background: #28a745; border: 1px solid #fff; color: white; width: 45%; }
+        input { padding: 12px; width: 80%; margin-bottom: 10px; border-radius: 5px; border: 1px solid var(--p-color); background: #1a1a1a; color: white; }
+        .shake { animation: shake 0.2s; }
+        @keyframes shake { 0% { transform: translate(2px, 2px); } 25% { transform: translate(-2px, -2px); } 50% { transform: translate(2px, -2px); } 75% { transform: translate(-2px, 2px); } 100% { transform: translate(0, 0); } }
     </style>
 </head>
-<body id="body">
+<body>
 
 <div class="container" id="main-cont">
     <div id="auth-screen" class="screen active">
-        <h1>SOMALIA WORLD V9</h1>
-        <p style="font-size: 12px; color: #aaa;">Bản thi đấu - Eternal Update</p>
-        <input type="text" id="user" placeholder="Tên anh hùng..." style="padding:12px; width:80%; margin-bottom:10px; background:#1a1a1a; color:white; border:1px solid #a200ff; border-radius:5px;"><br>
-        <input type="password" id="pass" placeholder="Mật khẩu..." style="padding:12px; width:80%; margin-bottom:10px; background:#1a1a1a; color:white; border:1px solid #a200ff; border-radius:5px;"><br>
-        <button onclick="auth('login')">VÀO GAME</button>
-        <button onclick="auth('reg')" style="background:none; border:none; color:#aaa; font-size:12px;">Chưa có tài khoản? Đăng ký ngay</button>
+        <h1>SOMALIA WORLD</h1>
+        <p style="font-size: 11px; color: #aaa;">Dự Án Đi Thi - Version 9.1</p>
+        <input type="text" id="user" placeholder="Tên tài khoản"><br>
+        <input type="password" id="pass" placeholder="Mật khẩu"><br>
+        <button onclick="auth('login')">ĐĂNG NHẬP</button>
+        <button onclick="auth('reg')" style="background:none; border:none; color:#aaa; font-size:12px;">Đăng ký tài khoản mới</button>
     </div>
 
     <div id="job-screen" class="screen">
-        <h2>CHỌN CON ĐƯỜNG RIÊNG</h2>
-        <button onclick="setJob('Cận Chiến')">⚔️ CẬN CHIẾN (Trâu bò)</button>
-        <button onclick="setJob('Phép Thuật')">🔮 PHÉP THUẬT (Sát thương)</button>
+        <h2>CHỌN LỚP NHÂN VẬT</h2>
+        <button onclick="setJob('Cận Chiến')">⚔️ CẬN CHIẾN (HP Cao)</button>
+        <button onclick="setJob('Phép Thuật')">🔮 PHÉP THUẬT (Dame Cao)</button>
     </div>
 
     <div id="game-screen" class="screen">
@@ -49,7 +50,6 @@
             <div>⚔️ Dame: <span id="dmg-display">0</span></div>
             <div>🧪 Bình máu: <span id="pot-count">0</span></div>
         </div>
-        
         <div class="hp-bar">
             <div id="hp-fill"></div>
             <div class="hp-text-overlay" id="hp-display">100/100</div>
@@ -58,13 +58,13 @@
         <select id="mob-select" onchange="changeMob()"></select>
 
         <h2 id="mob-name" style="color: #ff4d4d; margin: 5px 0;">-</h2>
-        <div style="font-size: 14px; margin-bottom: 5px;">Máu quái: <span id="mob-hp">0</span></div>
+        <div style="font-size: 14px;">Máu quái: <span id="mob-hp">0</span></div>
         
-        <button onclick="attack()" style="background: #800000; font-size: 18px; height: 60px;">⚔️ TẤN CÔNG ⚔️</button>
+        <button onclick="attack()" style="background: #800000; height: 55px; font-size: 18px;">⚔️ TẤN CÔNG</button>
         
         <div style="display: flex; justify-content: space-between;">
-            <button onclick="useHeal()" class="btn-heal">🧪 HỒI MÁU</button>
-            <button onclick="showScreen('bag-screen')" style="width: 45%;">🎒 BALO</button>
+            <button onclick="useHeal()" style="background:#28a745; width:48%;">🧪 HỒI MÁU</button>
+            <button onclick="showScreen('bag-screen')" style="width:48%;">🎒 BALO</button>
         </div>
         <button onclick="showScreen('shop-screen')">🛒 CỬA HÀNG</button>
 
@@ -73,7 +73,7 @@
 
     <div id="shop-screen" class="screen">
         <h2>CỬA HÀNG</h2>
-        <p>Ví vàng: <span id="shop-gold">0</span>$</p>
+        <p>Vàng: <span id="shop-gold">0</span>$</p>
         <div id="shop-list"></div>
         <button onclick="showScreen('game-screen')">QUAY LẠI</button>
     </div>
@@ -86,7 +86,8 @@
 </div>
 
 <script>
-    const STORAGE_KEY = 'SOMALIA_PERMANENT_V1_';
+    // --- DỮ LIỆU CỐ ĐỊNH ---
+    const STORAGE_KEY = 'SOMALIA_PERMANENT_V1_'; // Giúp ko mất acc khi update code
     const MOBS_DATA = [
         { name: "Slime", hp: 100, gold: 10, phan: 0.3 },
         { name: "King Slime", hp: 200, gold: 50, phan: 0.3 },
@@ -99,49 +100,57 @@
         { id: 100, name: "🧪 Bình Máu (Hồi 50% HP)", price: 50, type: "pot" },
         { id: 1, name: "Áo choàng rách", price: 100, type: "ao", hpBonus: 25 },
         { id: 2, name: "Găng tay da", price: 250, type: "tay", dmg: 20, dmgLvl: 2, job: "Cận Chiến" },
-        { id: 3, name: "Trượng cũ", price: 250, type: "tay", dmg: 25, dmgLvl: 2.5, job: "Phép Thuật" },
+        { id: 3, name: "Trượng ma pháp cũ", price: 250, type: "tay", dmg: 25, dmgLvl: 2.5, job: "Phép Thuật" },
         { id: 4, name: "Áo choàng hoàng tử", price: 20000, type: "ao", hpBonus: 120, hpLvl: 2 },
         { id: 5, name: "Găng tay kỵ sĩ", price: 2500, type: "tay", dmg: 200, dmgLvl: 4, job: "Cận Chiến" },
-        { id: 6, name: "Trượng thần", price: 2500, type: "tay", dmg: 300, dmgLvl: 4, job: "Phép Thuật" }
+        { id: 6, name: "Trượng ma thuật sư", price: 2500, type: "tay", dmg: 300, dmgLvl: 4, job: "Phép Thuật" }
     ];
 
+    // --- BIẾN TOÀN CỤC ---
     let p = { user:"", pass:"", job:"", lvl:1, gold:0, hp:100, baseMaxHp:100, baseDmg:10, pots:0, inv:[], equip:{ao:null, tay:null} };
     let mob = { ...MOBS_DATA[0], maxHp: MOBS_DATA[0].hp };
 
+    // --- HỆ THỐNG TÀI KHOẢN ---
     function auth(type) {
         let u = document.getElementById('user').value.trim();
         let ps = document.getElementById('pass').value.trim();
-        if(!u || !ps) return alert("Nhập đủ thông tin!");
+        if(!u || !ps) return alert("Vui lòng nhập tài khoản và mật khẩu!");
+
         let saved = localStorage.getItem(STORAGE_KEY + u);
         if(type === 'reg') {
-            if(saved) return alert("Tên này đã có người dùng!");
-            p.user = u; p.pass = ps; save(); showScreen('job-screen');
+            if(saved) return alert("Tên này đã có người đăng ký!");
+            p.user = u; p.pass = ps; save(); alert("Đăng ký thành công!");
+            showScreen('job-screen');
         } else {
-            if(!saved) return alert("Không thấy tài khoản!");
+            if(!saved) return alert("Không tìm thấy tài khoản!");
             let data = JSON.parse(saved);
             if(data.pass !== ps) return alert("Sai mật khẩu!");
             p = { ...p, ...data };
             p.job ? showScreen('game-screen') : showScreen('job-screen');
         }
-        initMobSelect(); updateUI();
+        initMobSelect();
+        updateUI();
     }
 
+    function setJob(job) {
+        p.job = job;
+        p.baseMaxHp = (job === 'Cận Chiến') ? 150 : 100;
+        p.hp = p.baseMaxHp;
+        p.baseDmg = (job === 'Cận Chiến') ? 15 : 25;
+        save(); updateUI(); showScreen('game-screen');
+    }
+
+    // --- LOGIC CHIẾN ĐẤU ---
     function initMobSelect() {
-        const sel = document.getElementById('mob-select');
-        sel.innerHTML = MOBS_DATA.map((m, i) => `<option value="${i}">${m.name}</option>`).join('');
+        const select = document.getElementById('mob-select');
+        select.innerHTML = MOBS_DATA.map((m, i) => `<option value="${i}">${m.name}</option>`).join('');
     }
 
     function changeMob() {
         const idx = document.getElementById('mob-select').value;
         mob = { ...MOBS_DATA[idx], maxHp: MOBS_DATA[idx].hp };
-        log(`Mục tiêu mới: ${mob.name}`);
+        log(`Đổi mục tiêu sang: ${mob.name}`);
         updateUI();
-    }
-
-    function setJob(job) {
-        p.job = job; p.baseMaxHp = (job === 'Cận Chiến') ? 150 : 100;
-        p.hp = p.baseMaxHp; p.baseDmg = (job === 'Cận Chiến') ? 15 : 25;
-        save(); updateUI(); showScreen('game-screen');
     }
 
     function calculateStats() {
@@ -152,28 +161,34 @@
 
     function attack() {
         let stats = calculateStats();
+        // Dame lên quái
         let dmgToMob = (mob.special === "10percent") ? (mob.maxHp * 0.1) : stats.dmg;
-        let phan = Math.floor(dmgToMob * (mob.phan || 0.3));
+        // Phản dame dựa trên Dame của mình
+        let phan = Math.floor(stats.dmg * (mob.phan || 0.3));
 
-        mob.hp -= dmgToMob; p.hp -= phan;
-        
-        // Hiệu ứng rung màn hình
+        mob.hp -= dmgToMob;
+        p.hp -= phan;
+
+        // Rung màn hình
         document.getElementById('main-cont').classList.add('shake');
         setTimeout(() => document.getElementById('main-cont').classList.remove('shake'), 200);
 
-        log(`⚔️ Bạn đánh -${Math.floor(dmgToMob)} HP. Bị phản -${phan} HP.`);
+        log(`⚔️ Đánh ${mob.name}: -${Math.floor(dmgToMob)} HP. Phản: -${phan} HP.`);
 
         if(mob.hp <= 0) {
-            let bonusGold = Math.floor(Math.random() * 50); // Quà may mắn
-            p.gold += mob.gold + bonusGold; p.lvl++;
-            log(`✨ DIỆT ${mob.name}! +${mob.gold + bonusGold}$ & Lên Cấp!`);
+            let bonus = Math.floor(Math.random() * 20);
+            p.gold += mob.gold + bonus;
+            p.lvl++;
+            log(`✨ DIỆT ${mob.name.toUpperCase()}! +${mob.gold + bonus}$ & Lên Cấp!`);
             mob.hp = mob.maxHp;
-            p.hp = calculateStats().maxHp;
+            p.hp = calculateStats().maxHp; // Hồi máu sau trận
         }
 
         if(p.hp <= 0) {
-            alert("Bạn đã hy sinh!");
-            p.gold = Math.floor(p.gold * 0.9); p.hp = stats.maxHp; mob.hp = mob.maxHp;
+            alert("Bạn đã tử trận!");
+            p.gold = Math.floor(p.gold * 0.9);
+            p.hp = stats.maxHp;
+            mob.hp = mob.maxHp;
         }
         save(); updateUI();
     }
@@ -181,16 +196,15 @@
     function useHeal() {
         let stats = calculateStats();
         if(p.pots > 0) {
-            if(p.hp >= stats.maxHp) return log("Máu đã đầy, không cần hồi!");
+            if(p.hp >= stats.maxHp) return log("Máu đã đầy!");
             p.pots--;
             p.hp = Math.min(stats.maxHp, p.hp + (stats.maxHp * 0.5));
-            log("🧪 Bạn đã uống Bình Máu! Hồi 50% HP.");
+            log("🧪 Đã dùng Bình Máu (Hồi 50% HP)!");
             save(); updateUI();
-        } else {
-            log("❌ Hết Bình Máu rồi! Hãy vào Shop mua.");
-        }
+        } else log("❌ Không có Bình Máu!");
     }
 
+    // --- CỬA HÀNG & KHO ĐỒ ---
     function renderShop() {
         let html = "";
         SHOP_ITEMS.forEach(itm => {
@@ -215,7 +229,7 @@
             else p.inv.push(itm);
             save(); updateUI(); renderShop();
             log(`Mua thành công ${itm.name}!`);
-        } else alert("Thiếu vàng rồi!");
+        } else alert("Bạn không đủ vàng!");
     }
 
     function renderInv() {
@@ -233,6 +247,7 @@
         save(); updateUI(); renderInv();
     }
 
+    // --- CẬP NHẬT GIAO DIỆN ---
     function updateUI() {
         let stats = calculateStats();
         document.getElementById('gold').innerText = p.gold;
@@ -246,8 +261,14 @@
         document.getElementById('mob-hp').innerText = Math.max(0, Math.floor(mob.hp));
     }
 
-    function log(m) { let l = document.getElementById('game-log'); l.innerHTML = `> ${m}<br>${l.innerHTML}`; l.scrollTop = 0; }
+    function log(m) {
+        let l = document.getElementById('game-log');
+        l.innerHTML = `> ${m}<br>${l.innerHTML}`;
+        l.scrollTop = 0;
+    }
+
     function save() { localStorage.setItem(STORAGE_KEY + p.user, JSON.stringify(p)); }
+
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
