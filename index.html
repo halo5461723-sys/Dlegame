@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somalia World V16.2 - Full Fix</title>
+    <title>Somalia World V16.3 - Divine Artifacts</title>
     <style>
-        :root { --p-color: #a200ff; --gold: #ffd700; --fire: #ff4500; --bg-dark: rgba(0, 0, 0, 0.95); }
+        :root { --p-color: #a200ff; --gold: #ffd700; --fire: #ff4500; --uranium: #39ff14; --bg-dark: rgba(0, 0, 0, 0.95); }
         body { background: #0b001a; color: #e0b0ff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; }
         .container { background: var(--bg-dark); border: 2px solid var(--p-color); border-radius: 15px; padding: 15px; max-width: 480px; margin: auto; box-shadow: 0 0 25px var(--p-color); }
         .screen { display: none; } .active { display: block; }
@@ -14,13 +14,15 @@
         #hp-fill { height: 100%; background: linear-gradient(90deg, #ff4d4d, #ff9494); width: 100%; transition: 0.3s; }
         .hp-text { position: absolute; width: 100%; text-align: center; font-size: 11px; line-height: 20px; color: white; text-shadow: 1px 1px black; }
         
-        /* HIỆU ỨNG VIP CẦU VỒNG (Dagger & Vương Miện) */
-        .vip-item { border: 2px solid; border-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet) 1; animation: vip-glow 2s infinite linear; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
-        @keyframes vip-glow { 0% { filter: hue-rotate(0deg) brightness(1.2); } 100% { filter: hue-rotate(360deg) brightness(1.2); } }
+        /* HIỆU ỨNG THƯỢNG LONG BAY THEO */
+        .pet-orbit { position: absolute; width: 10px; height: 10px; background: cyan; border-radius: 50%; box-shadow: 0 0 15px cyan, 0 0 30px white; animation: orbit 2s infinite linear; pointer-events: none; }
+        @keyframes orbit { from { transform: rotate(0deg) translateX(40px) rotate(0deg); } to { transform: rotate(360deg) translateX(40px) rotate(-360deg); } }
 
-        /* HIỆU ỨNG LỬA (Kiếm Hỏa Lực) */
-        .fire-item { border: 2px solid #ff4500 !important; box-shadow: 0 0 15px #ff4500; animation: flame-pulse 1s infinite alternate; }
-        @keyframes flame-pulse { from { opacity: 0.7; transform: scale(1); } to { opacity: 1; transform: scale(1.02); } }
+        /* HIỆU ỨNG TRANG BỊ */
+        .vip-item { border: 2px solid; border-image: linear-gradient(45deg, red, yellow, lime, cyan, blue, magenta) 1; animation: vip-glow 2s infinite linear; }
+        @keyframes vip-glow { 0% { filter: hue-rotate(0deg) brightness(1.2); } 100% { filter: hue-rotate(360deg) brightness(1.2); } }
+        .uranium-item { border: 2px solid var(--uranium) !important; box-shadow: 0 0 15px var(--uranium); }
+        .fire-item { border: 2px solid var(--fire) !important; box-shadow: 0 0 15px var(--fire); }
 
         button { background: #4b0082; color: white; border: 1px solid var(--p-color); padding: 10px; margin: 4px; cursor: pointer; width: 94%; border-radius: 8px; font-weight: bold; }
         .item-card { border: 1px solid #444; padding: 10px; margin: 5px; background: rgba(255,255,255,0.08); border-radius: 5px; text-align: left; font-size: 11px; }
@@ -30,13 +32,13 @@
 </head>
 <body>
 
-<div class="container">
-    <div id="auth-screen" class="screen active">
-        <h1>SOMALIA WORLD V16.2</h1>
+<div class="container" style="position: relative;">
+    <div id="pet-div"></div> <div id="auth-screen" class="screen active">
+        <h1>SOMALIA WORLD V16.3</h1>
         <input type="text" id="user" placeholder="Tên nhân vật" style="padding:10px; width:80%; margin:5px;"><br>
         <input type="password" id="pass" placeholder="Mật khẩu" style="padding:10px; width:80%; margin:5px;"><br>
         <button onclick="auth('login')">VÀO GAME</button>
-        <button onclick="auth('reg')" style="background:none; border:none; color:#888; font-size:11px;">Đăng ký mới</button>
+        <button onclick="auth('reg')" style="background:none; border:none; color:#888; font-size:11px;">Đăng ký</button>
     </div>
 
     <div id="game-screen" class="screen">
@@ -47,6 +49,7 @@
             <div>🩸 HP: <span id="hp-num">0</span></div>
         </div>
         <div class="hp-bar" id="main-hp-bar"><div id="hp-fill"></div><div class="hp-text" id="hp-display">100/100</div></div>
+        <div id="revive-info" style="font-size: 10px; color: cyan;"></div>
         
         <select id="mob-select" onchange="changeMob()"></select>
         <h3 id="mob-name" style="margin:5px 0; color: #ff4d4d;">-</h3>
@@ -77,7 +80,6 @@
 <script>
     const STORAGE_KEY = 'SOMALIA_V14_DATA_';
     
-    // ĐÃ KHÔI PHỤC ĐẦY ĐỦ 10 QUÁI VẬT
     const MOBS_DATA = [
         { name: "Slime Xanh", hp: 100, gold: 120, phan: 0.1 },
         { name: "Vua Slime", hp: 5000, gold: 1500, phan: 0.1 },
@@ -85,44 +87,33 @@
         { name: "Vua Xương Cổ Đại", hp: 100000, gold: 35000, phan: 0.2 },
         { name: "Long Binh", hp: 450000, gold: 120000, phan: 0.2 },
         { name: "Thủy Long (BOSS)", hp: 1200000, gold: 200000, phan: 0.3 },
-        { name: "Hắc Quái", hp: 2500000, gold: 400000, phan: 0.4 },
         { name: "Hắc Binh", hp: 5000000, gold: 600000, phan: 0.5 },
         { name: "Hắc Sĩ (ĐẠI BOSS)", hp: 15000000, gold: 2000000, phan: 0.3 }
     ];
 
     const SHOP_ITEMS = [
-        // ĐỒ TÂN THỦ & THƯỜNG
         { id: 101, name: "⚔️ Kiếm Gỉ", price: 250, type: "tay_chinh", dmg: 65 },
         { id: 102, name: "🛡️ Giáp Vải", price: 250, type: "ao", hpBonus: 280 },
-        { id: 103, name: "⚔️ Kiếm Hiệp Sĩ", price: 2500, type: "tay_chinh", dmg: 320 },
-        { id: 104, name: "🛡️ Giáp Thép", price: 2500, type: "ao", hpBonus: 1500 },
-        
-        // ĐỒ VIP & ĐẶC BIỆT
         { id: 1, name: "🔥 Kiếm Hỏa Lực", price: 30000, type: "tay_chinh", dmg: 1500, isFire: true },
+        { id: 201, name: "☢️ Áo Uranium", price: 50000, type: "ao", hpBonus: 3000, hpLvl: 5, isUranium: true },
         { id: 2, name: "🗡️ Dagger Đặc Biệt", price: 50000, type: "tay_phu", dmg: 7999, dmgLvl: 9, isVip: true },
+        { id: 202, name: "🐉 Thượng Long (Phép)", price: 100000, type: "pet", dmg: 500, isPet: true },
+        { id: 203, name: "🔱 Hủy Diệt Thương (Phép)", price: 20000k, priceVal: 200000, type: "tay_chinh", dmg: 3000, dmgLvl: 9, isVip: true },
         { id: 3, name: "👑 Vương Miện Thánh", price: "50%", minGold: 1000000, type: "non", dmg: 5000, dmgLvl: 20, isVip: true },
         { id: 4, name: "💍 Nhẫn Long", price: 100000, type: "nhan", hpBonus: 2000, hpRate: 0.05, dmgRate: 0.05 },
-        { id: 5, name: "🔱 Quyền Trượng King", price: 75000, type: "tay_chinh", dmg: 1800 },
         { id: 6, name: "🧪 Bình Máu", price: 200, type: "pot" }
     ];
 
-    let p = { user:"", pass:"", lvl:1, gold:0, hp:500, baseMaxHp:500, baseDmg:50, pots:0, inv:[], equip:{ao:null, tay_chinh:null, tay_phu:null, non:null, nhan:null} };
+    let p = { user:"", pass:"", lvl:1, gold:0, hp:500, baseMaxHp:500, baseDmg:50, pots:0, inv:[], equip:{ao:null, tay_chinh:null, tay_phu:null, non:null, nhan:null, pet:null}, revives: 5 };
     let mob = { ...MOBS_DATA[0], maxHp: MOBS_DATA[0].hp };
 
     function auth(type) {
         let u = document.getElementById('user').value.trim();
         let ps = document.getElementById('pass').value.trim();
-        if(!u || !ps) return alert("Nhập đủ!");
         let saved = localStorage.getItem(STORAGE_KEY + u);
-        if(type === 'reg') {
-            if(saved) return alert("Tên đã tồn tại!");
-            p.user = u; p.pass = ps; save(); alert("Đã đăng ký!"); showScreen('game-screen');
-        } else {
-            if(!saved) return alert("Ko thấy nick!");
-            p = JSON.parse(saved);
-            showScreen('game-screen');
-        }
-        initMobSelect(); updateUI();
+        if(type === 'reg' && !saved) { p.user = u; p.pass = ps; save(); }
+        else if(saved) { p = JSON.parse(saved); }
+        showScreen('game-screen'); initMobSelect(); updateUI();
     }
 
     function initMobSelect() {
@@ -131,73 +122,56 @@
 
     function changeMob() {
         let selected = MOBS_DATA[document.getElementById('mob-select').value];
-        mob = { ...selected, maxHp: selected.hp }; updateUI();
+        mob = { ...selected, maxHp: selected.hp }; p.revives = p.equip.pet ? 5 : 0; updateUI();
     }
 
     function calculateStats() {
         let bDmg = 0, bHp = 0, rDmg = 0, rHp = 0;
-        let isFireOn = false;
-
         Object.keys(p.equip).forEach(slot => {
             let e = p.equip[slot];
             if(e) {
-                let currentDmg = (e.dmg || 0) + ((e.dmgLvl || 0) * p.lvl);
-                // Dagger bị giảm 50% nếu đeo cùng vũ khí tay chính
-                if (slot === 'tay_phu' && p.equip.tay_chinh) { currentDmg *= 0.5; }
-                if (e.isFire) isFireOn = true;
-                bDmg += currentDmg;
-                bHp += (e.hpBonus || 0);
-                rDmg += (e.dmgRate || 0);
-                rHp += (e.hpRate || 0);
+                let d = (e.dmg || 0) + ((e.dmgLvl || 0) * p.lvl);
+                if (slot === 'tay_phu' && p.equip.tay_chinh) d *= 0.5;
+                bDmg += d;
+                bHp += (e.hpBonus || 0) + ((e.hpLvl || 0) * p.lvl);
+                rDmg += (e.dmgRate || 0); rHp += (e.hpRate || 0);
             }
         });
-
-        // Cập nhật hiệu ứng rực lửa cho thanh máu
-        const hpBar = document.getElementById('main-hp-bar');
-        if(isFireOn) hpBar.style.boxShadow = "0 0 15px #ff4500";
-        else hpBar.style.boxShadow = "none";
-
-        return { 
-            totalDmg: Math.floor((p.baseDmg + bDmg) * (1 + rDmg)), 
-            totalMaxHp: Math.floor((p.baseMaxHp + bHp) * (1 + rHp)),
-            isFire: isFireOn
-        };
+        return { totalDmg: Math.floor((p.baseDmg + bDmg) * (1 + rDmg)), totalMaxHp: Math.floor((p.baseMaxHp + bHp) * (1 + rHp)) };
     }
 
     function attack() {
-        let s = calculateStats(); 
-        let phan = Math.floor(s.totalDmg * (mob.phan || 0.1));
+        let s = calculateStats(); let phan = Math.floor(s.totalDmg * (mob.phan || 0.1));
         mob.hp -= s.totalDmg; p.hp -= phan;
         log(`⚔️ Gây -${s.totalDmg}. Phản -${phan}.`);
-        if(s.isFire) { let burn = Math.floor(s.totalDmg * 0.1); mob.hp -= burn; log(`🔥 Lửa đốt thêm -${burn}!`); }
-        if(mob.hp <= 0) { p.gold += mob.gold; p.lvl++; mob.hp = mob.maxHp; log(`✨ +${mob.gold}$`); }
-        if(p.hp <= 0) { p.hp = s.totalMaxHp; mob.hp = mob.maxHp; alert("Gục ngã!"); }
+        if(p.equip.tay_chinh?.isFire) { let burn = Math.floor(s.totalDmg*0.1); mob.hp -= burn; log(`🔥 Đốt -${burn}`); }
+        
+        if(p.hp <= 0) {
+            if(p.revives > 0) { p.hp = s.totalMaxHp; p.revives--; log(`✨ Miễn tử! Còn ${p.revives} lần.`); }
+            else { p.hp = s.totalMaxHp; mob.hp = mob.maxHp; alert("Gục ngã!"); }
+        }
+        if(mob.hp <= 0) { p.gold += mob.gold; p.lvl++; mob.hp = mob.maxHp; log(`✨ +${mob.gold}$`); p.revives = p.equip.pet ? 5 : 0; }
         save(); updateUI();
     }
 
     function renderShop() {
         document.getElementById('shop-list').innerHTML = SHOP_ITEMS.map(itm => `
-            <div class="item-card ${itm.isVip ? 'vip-item' : ''} ${itm.isFire ? 'fire-item' : ''}">
-                <b>${itm.name}</b><br>Giá: ${itm.price === "50%" ? "50% Vàng" : itm.price + "$"}<br>
+            <div class="item-card ${itm.isVip?'vip-item':''} ${itm.isUranium?'uranium-item':''} ${itm.isFire?'fire-item':''}">
+                <b>${itm.name}</b><br>Giá: ${itm.price === "50%" ? "50% Vàng" : (itm.priceVal || itm.price) + "$"}<br>
                 <button onclick="buy(${itm.id})" style="float:right">MUA</button>
-            </div>
-        `).join('');
+            </div>`).join('');
     }
 
     function buy(id) {
         let itm = SHOP_ITEMS.find(i => i.id === id);
-        let cost = itm.price === "50%" ? Math.floor(p.gold * 0.5) : itm.price;
-        if(p.gold >= cost) {
-            p.gold -= cost;
-            if(itm.type === 'pot') p.pots++; else p.inv.push({...itm, uid: Date.now()});
-            save(); updateUI(); alert("Đã mua!");
-        } else alert("Thiếu vàng!");
+        let cost = itm.price === "50%" ? Math.floor(p.gold * 0.5) : (itm.priceVal || itm.price);
+        if(p.gold >= cost) { p.gold -= cost; if(itm.type==='pot') p.pots++; else p.inv.push({...itm, uid:Date.now()}); save(); updateUI(); alert("Đã mua!"); }
     }
 
     function renderInv() {
         document.getElementById('inventory-list').innerHTML = p.inv.map(itm => {
             let isEq = Object.values(p.equip).some(e => e && e.uid === itm.uid);
-            return `<div class="item-card ${itm.isVip ? 'vip-item' : ''} ${itm.isFire ? 'fire-item' : ''}">
+            return `<div class="item-card ${itm.isVip?'vip-item':''} ${itm.isUranium?'uranium-item':''}">
                 ${itm.name} <button onclick="equip(${itm.uid})" style="float:right">${isEq?'THÁO':'MẶC'}</button>
             </div>`;
         }).join('') || "Trống";
@@ -206,29 +180,27 @@
     function equip(uid) {
         let itm = p.inv.find(i => i.uid === uid);
         p.equip[itm.type] = (p.equip[itm.type]?.uid === uid) ? null : itm;
+        if(itm.type === 'pet') p.revives = 5;
         save(); updateUI(); renderInv();
     }
 
     function updateUI() {
         let s = calculateStats();
         document.getElementById('gold').innerText = Math.floor(p.gold);
-        document.getElementById('lvl').innerText = p.lvl;
         document.getElementById('dmg-display').innerText = s.totalDmg;
+        document.getElementById('lvl').innerText = p.lvl;
         document.getElementById('hp-num').innerText = Math.floor(p.hp);
         document.getElementById('hp-display').innerText = `${Math.floor(p.hp)}/${s.totalMaxHp}`;
         document.getElementById('hp-fill').style.width = (p.hp/s.totalMaxHp*100) + "%";
         document.getElementById('pot-count').innerText = p.pots;
-        document.getElementById('mob-name').innerText = mob.name;
         document.getElementById('mob-hp').innerText = Math.floor(mob.hp);
+        document.getElementById('mob-name').innerText = mob.name;
+        document.getElementById('pet-div').innerHTML = p.equip.pet ? '<div class="pet-orbit"></div>' : '';
+        document.getElementById('revive-info').innerText = p.equip.pet ? `Miễn tử: ${p.revives}/5` : '';
     }
 
     function useHeal() { let s = calculateStats(); if(p.pots > 0) { p.pots--; p.hp = Math.min(s.totalMaxHp, p.hp + s.totalMaxHp*0.5); save(); updateUI(); } }
-    function showScreen(id) { 
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        if(id==='shop-screen') renderShop();
-        if(id==='bag-screen') renderInv();
-    }
+    function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='shop-screen') renderShop(); if(id==='bag-screen') renderInv(); }
     function log(m) { let l = document.getElementById('game-log'); l.innerHTML = `> ${m}<br>${l.innerHTML}`; }
     function save() { localStorage.setItem(STORAGE_KEY + p.user, JSON.stringify(p)); }
 </script>
