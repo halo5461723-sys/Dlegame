@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somalia World V15.1 - Fixed Everything</title>
+    <title>Somalia World V15.1 - Fix Login</title>
     <style>
         :root { --p-color: #a200ff; --gold: #ffd700; --bg-dark: rgba(0, 0, 0, 0.95); }
         body { background: #0b001a; color: #e0b0ff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; }
@@ -29,8 +29,8 @@
         <h1>SOMALIA WORLD V15.1</h1>
         <input type="text" id="user" placeholder="Tên nhân vật"><br>
         <input type="password" id="pass" placeholder="Mật khẩu"><br>
-        <button onclick="auth('login')">BẮT ĐẦU</button>
-        <button onclick="auth('reg')">Tạo nhân vật mới</button>
+        <button onclick="auth('login')">ĐĂNG NHẬP</button>
+        <button onclick="auth('reg')" style="background:none; border:none; color:#888; font-size:12px;">Chưa có nick? Đăng ký tại đây</button>
     </div>
 
     <div id="job-screen" class="screen">
@@ -83,54 +83,56 @@
     const STORAGE_KEY = 'SOMALIA_V14_DATA_';
     
     const MOBS_DATA = [
-        { name: "Slime Xanh", hp: 100, gold: 80, phan: 0.1 },
-        { name: "Vua Slime", hp: 2500, gold: 600, phan: 0.1 },
-        { name: "Lính Xương", hp: 8000, gold: 1800, phan: 0.1 },
-        { name: "Vua Xương Cổ Đại", hp: 50000, gold: 30000, phan: 0.2 },
-        { name: "Thủy Long (BOSS)", hp: 600000, gold: 80000, phan: 0.3, drop: { gem: 3, rate: 0.5 } },
+        { name: "Slime Xanh", hp: 100, gold: 60, phan: 0.1 },
+        { name: "Vua Slime", hp: 2500, gold: 650, phan: 0.1 },
+        { name: "Lính Xương", hp: 8000, gold: 2000, phan: 0.1 },
+        { name: "Vua Xương Cổ Đại", hp: 45000, gold: 30000, phan: 0.2 },
+        { name: "Thủy Long (BOSS)", hp: 600000, gold: 80000, phan: 0.3, drop: { gem: 3, rate: 0.4 } },
         { name: "Hắc Quái", hp: 1000000, gold: 100000, phan: 0.5 },
         { name: "Hắc Binh", hp: 2000000, gold: 150000, phan: 0.5 },
         { name: "Hắc Sĩ (LIMIT BOSS)", hp: 5000000, gold: 400000, phan: 0.3, drop: { gem: 10, rate: 1.0 }, special: "time" }
     ];
 
     const SHOP_ITEMS = [
-        // TAB CHIẾN BINH (Cate: War)
+        // CHIẾN BINH
         { id: 1, name: "⚔️ Kiếm Gỉ", price: 250, type: "tay", dmg: 50, job: "Chiến Binh", cate: "War" },
         { id: 2, name: "🛡️ Giáp Vải Chiến", price: 250, type: "ao", hpBonus: 150, job: "Chiến Binh", cate: "War" },
         { id: 3, name: "⚔️ Kiếm Hiệp Sĩ", price: 2500, type: "tay", dmg: 220, job: "Chiến Binh", cate: "War" },
         { id: 4, name: "🛡️ Giáp Thép", price: 2500, type: "ao", hpBonus: 800, job: "Chiến Binh", cate: "War" },
-        { id: 5, name: "🔥 Găng Tay King", price: 50000, type: "tay", dmg: 700, dmgLvl: 7, job: "Chiến Binh", cate: "War" },
+        { id: 5, name: "🔥 Găng Tay King", price: 50000, type: "tay", dmg: 700, dmgLvl: 6, job: "Chiến Binh", cate: "War" },
 
-        // TAB PHÁP SƯ (Cate: Mag)
+        // PHÁP SƯ
         { id: 6, name: "🔮 Trượng Gỗ", price: 250, type: "tay", dmg: 60, job: "Pháp Sư", cate: "Mag" },
         { id: 7, name: "🧥 Áo Choàng Tập Sự", price: 250, type: "ao", hpBonus: 120, job: "Pháp Sư", cate: "Mag" },
-        { id: 8, name: "🔮 Trượng Đồ Đệ", price: 2500, type: "tay", dmg: 280, job: "Pháp Sư", cate: "Mag" },
+        { id: 8, name: "🔮 Trượng Đồ Đệ", price: 2500, type: "tay", dmg: 260, job: "Pháp Sư", cate: "Mag" },
         { id: 9, name: "🧥 Áo Choàng Lụa", price: 2500, type: "ao", hpBonus: 650, job: "Pháp Sư", cate: "Mag" },
-        { id: 10, name: "⚡ Trượng Ma Pháp Sư", price: 50000, type: "tay", dmg: 800, dmgLvl: 7, job: "Pháp Sư", cate: "Mag" },
+        { id: 10, name: "⚡ Trượng Ma Pháp Sư", price: 50000, type: "tay", dmg: 800, dmgLvl: 6, job: "Pháp Sư", cate: "Mag" },
 
-        // TAB PHỤ KIỆN (Cate: Acc) - Không gán 'job' để ai cũng mua được
+        // PHỤ KIỆN
         { id: 100, name: "🧪 Bình Máu", price: 200, type: "pot", cate: "Acc" },
-        { id: 11, name: "👟 Giày Tận Thế", price: 70000, type: "giay", hpBonus: 700, cate: "Acc" },
-        { id: 12, name: "👖 Quần Animo", price: 70000, type: "quan", hpBonus: 700, cate: "Acc" },
-        { id: 13, name: "💍 Nhẫn Blackhole", price: 200000, type: "nhan", hpBonus: 1500, dmgRate: 0.1, cate: "Acc" },
+        { id: 11, name: "👟 Giày Tận Thế", price: 70000, type: "giay", hpBonus: 750, cate: "Acc" },
+        { id: 12, name: "👖 Quần Animo", price: 70000, type: "quan", hpBonus: 750, cate: "Acc" },
+        { id: 13, name: "💍 Nhẫn Blackhole", price: 200000, type: "nhan", hpBonus: 1800, dmgRate: 0.12, cate: "Acc" },
         { id: 14, name: "👑 Vương Miện Thánh", price: "50%", minGold: 999000, type: "non", dmg: 4000, dmgLvl: 15, cate: "Acc" }
     ];
 
-    let p = { user:"", pass:"", job:"", lvl:1, gold:0, gems:0, hp:300, baseMaxHp:300, baseDmg:40, pots:0, inv:[], equip:{ao:null, tay:null, non:null, giay:null, quan:null, nhan:null} };
+    let p = { user:"", pass:"", job:"", lvl:1, gold:0, gems:0, hp:200, baseMaxHp:200, baseDmg:35, pots:0, inv:[], equip:{ao:null, tay:null, non:null, giay:null, quan:null, nhan:null} };
     let mob = { ...MOBS_DATA[0], maxHp: MOBS_DATA[0].hp };
 
     function auth(type) {
         let u = document.getElementById('user').value.trim();
         let ps = document.getElementById('pass').value.trim();
-        if(!u || !ps) return alert("Nhập đủ thông tin!");
+        if(!u || !ps) return alert("Nhập đủ tên và mật khẩu!");
         let saved = localStorage.getItem(STORAGE_KEY + u);
         if(type === 'reg') {
-            if(saved) return alert("Tên đã có!");
-            p.user = u; p.pass = ps; save(); alert("Đã tạo acc!"); showScreen('job-screen');
+            if(saved) return alert("Tên đã có chủ!");
+            p.user = u; p.pass = ps; 
+            save(); alert("Đăng ký xong! Hãy chọn nghề."); showScreen('job-screen');
         } else {
-            if(!saved) return alert("Ko thấy acc!");
-            p = JSON.parse(saved);
-            if(p.pass !== ps) return alert("Sai MK!");
+            if(!saved) return alert("Sai tên hoặc mật khẩu!");
+            let data = JSON.parse(saved);
+            if(data.pass !== ps) return alert("Sai mật khẩu!");
+            p = data;
             p.job ? showScreen('game-screen') : showScreen('job-screen');
         }
         initMobSelect(); updateUI();
@@ -141,11 +143,12 @@
     }
 
     function changeMob() {
-        let selected = MOBS_DATA[document.getElementById('mob-select').value];
+        let idx = document.getElementById('mob-select').value;
+        let selected = MOBS_DATA[idx];
         if(selected.special === "time") {
             let now = new Date();
             if(!(now.getHours() % 2 === 0 && now.getMinutes() <= 10)) {
-                alert("Boss chỉ xuất hiện 10p đầu giờ chẵn!");
+                alert("Hắc Sĩ chỉ ra 10 phút đầu giờ chẵn!");
                 document.getElementById('mob-select').value = 0;
                 return;
             }
@@ -164,52 +167,73 @@
         let s = calculateStats();
         let phan = Math.floor(s.totalDmg * (mob.phan || 0.1));
         mob.hp -= s.totalDmg; p.hp -= phan;
-        log(`⚔️ Gây -${s.totalDmg}. Bị phản -${phan}.`);
+        log(`⚔️ Bạn -${s.totalDmg}. Bị phản -${phan}.`);
         if(mob.hp <= 0) {
             p.gold += mob.gold; p.lvl++;
             if(mob.drop && Math.random() <= mob.drop.rate) p.gems += mob.drop.gem;
             log(`✨ Diệt ${mob.name}! +${mob.gold}$`);
             mob.hp = mob.maxHp;
         }
-        if(p.hp <= 0) { alert("Bạn đã gục!"); p.hp = s.totalMaxHp; mob.hp = mob.maxHp; }
+        if(p.hp <= 0) { alert("Bạn đã gục ngã!"); p.hp = s.totalMaxHp; mob.hp = mob.maxHp; }
         save(); updateUI();
     }
 
     function renderShop(cate) {
         document.querySelectorAll('.shop-tab span').forEach(s => s.classList.remove('active-tab'));
         document.getElementById('tab-' + cate).classList.add('active-tab');
-
         let filtered = SHOP_ITEMS.filter(i => i.cate === cate);
         document.getElementById('shop-list').innerHTML = filtered.map(itm => {
-            // LOGIC MỚI: Nếu món đồ KHÔNG có thuộc tính 'job', hoặc 'job' KHỚP với nghề người chơi thì cho mua
             let canBuy = !itm.job || itm.job === p.job;
-            
-            return `<div class="item-card" style="border: 1px solid ${canBuy ? '#a200ff' : '#333'}">
-                <b style="color:${canBuy ? 'white' : '#666'}">${itm.name}</b><br>
-                Giá: ${itm.price === "50%" ? "50% Vàng" : itm.price + "$"}<br>
-                <button onclick="buy(${itm.id})" style="float:right; background:${canBuy?'#4b0082':'#222'}; color:${canBuy?'white':'#555'}" ${canBuy ? '' : 'disabled'}>
-                    ${canBuy ? 'MUA' : 'SAI NGHỀ'}
-                </button>
-                <div style="clear:both"></div>
+            return `<div class="item-card" style="opacity: ${canBuy?1:0.6}">
+                <b>${itm.name}</b><br>Giá: ${itm.price === "50%" ? "50% Vàng" : itm.price + "$"}<br>
+                <small>Yêu cầu: ${itm.job || 'Tất cả'}</small>
+                <button onclick="buy(${itm.id})" style="float:right; background:${canBuy?'':'#444'}">${canBuy?'MUA':'SAI NGHỀ'}</button>
             </div>`;
         }).join('');
     }
 
     function buy(id) {
         let itm = SHOP_ITEMS.find(i => i.id === id);
-        if(itm.job && itm.job !== p.job) return alert("Món này không dành cho phái của bạn!");
-        
+        if(itm.job && itm.job !== p.job) return alert("Nghề của bạn không mua được món này!");
         let cost = itm.price === "50%" ? Math.floor(p.gold * 0.5) : itm.price;
-        if(itm.price === "50%" && p.gold < itm.minGold) return alert("Cần 999k vàng!");
-        
+        if(itm.price === "50%" && p.gold < itm.minGold) return alert("Cần tối thiểu 999k vàng!");
         if(p.gold >= cost) {
             p.gold -= cost;
             if(itm.type === 'pot') p.pots++; else p.inv.push({...itm, uid: Date.now()});
-            save(); updateUI(); alert("Đã mua thành công!");
+            save(); updateUI(); alert("Đã mua!");
         } else alert("Bạn không đủ vàng!");
     }
 
     function renderInv() {
         document.getElementById('inventory-list').innerHTML = p.inv.map(itm => {
-            let isEq = Object.values
-    
+            let isEq = Object.values(p.equip).some(e => e && e.uid === itm.uid);
+            return `<div class="item-card">${itm.name} <button onclick="equip(${itm.uid})" style="float:right">${isEq ? 'THÁO' : 'MẶC'}</button></div>`;
+        }).join('') || "Túi đồ trống";
+    }
+
+    function equip(uid) {
+        let itm = p.inv.find(i => i.uid === uid);
+        p.equip[itm.type] = (p.equip[itm.type]?.uid === uid) ? null : itm;
+        save(); updateUI(); renderInv();
+    }
+
+    function setJob(j) { p.job = j; p.baseMaxHp = (j === 'Chiến Binh' ? 400 : 350); p.hp = p.baseMaxHp; save(); updateUI(); showScreen('game-screen'); }
+    function updateUI() {
+        let s = calculateStats();
+        document.getElementById('gold').innerText = Math.floor(p.gold);
+        document.getElementById('job-display').innerText = p.job || "Chưa chọn";
+        document.getElementById('lvl').innerText = p.lvl;
+        document.getElementById('dmg-display').innerText = s.totalDmg;
+        document.getElementById('hp-display').innerText = `${Math.floor(p.hp)}/${s.totalMaxHp}`;
+        document.getElementById('hp-fill').style.width = (p.hp/s.totalMaxHp*100) + "%";
+        document.getElementById('pot-count').innerText = p.pots;
+        document.getElementById('mob-name').innerText = mob.name;
+        document.getElementById('mob-hp').innerText = Math.floor(mob.hp);
+    }
+    function useHeal() { let s = calculateStats(); if(p.pots > 0) { p.pots--; p.hp = Math.min(s.totalMaxHp, p.hp + s.totalMaxHp*0.5); save(); updateUI(); } }
+    function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='shop-screen') renderShop(p.job === 'Chiến Binh' ? 'War' : 'Mag'); if(id==='bag-screen') renderInv(); }
+    function log(m) { let l = document.getElementById('game-log'); l.innerHTML = `> ${m}<br>${l.innerHTML}`; }
+    function save() { localStorage.setItem(STORAGE_KEY + p.user, JSON.stringify(p)); }
+</script>
+</body>
+</html>
