@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Somalia Game</title>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; 
+               background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg');
+               background-size: cover; background-attachment: fixed; }
+        .screen { display: none; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; border: 2px solid #a200ff; max-width: 400px; margin: auto; }
+        .active { display: block; }
+        button { background: #a200ff; color: white; border: none; padding: 10px 20px; margin: 10px; cursor: pointer; border-radius: 5px; }
+        .stat { color: #00ff41; font-weight: bold; }
+        .item { color: #ffd700; font-style: italic; }
+        #enemy-hp { color: #ff4d4d; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-screen" class="screen active">
+        <h2>HỆ THỐNG SOMALIA</h2>
+        <input type="text" id="username" placeholder="Nhập tên nhân vật...">
+        <br>
+        <button onclick="login()">BẮT ĐẦU CHƠI</button>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <h2 id="player-display">Chào, </h2>
+        <p>Sức mạnh: <span id="player-dmg" class="stat">10</span> | Trang bị: <span id="player-item" class="item">Tay không</span></p>
+        
+        <hr>
+        <h3>QUÁI THIÊN THẠCH</h3>
+        <p>Máu quái: <span id="enemy-hp">100</span>/100</p>
+        <button onclick="attack()">ĐÁNH QUÁI</button>
+        
+        <p id="log" style="font-size: 14px; color: #aaa;"></p>
+        <button onclick="logout()" style="background: #555;">ĐĂNG XUẤT</button>
+    </div>
+
+    <script>
+        let player = { name: "", dmg: 10, item: "Tay không" };
+        let enemyHP = 100;
+
+        // Hàm Đăng nhập / Đăng ký
+        function login() {
+            const nameInput = document.getElementById('username').value;
+            if (nameInput === "") return alert("Vui lòng nhập tên!");
+            
+            // Kiểm tra xem đã có dữ liệu cũ chưa
+            let savedData = localStorage.getItem(nameInput);
+            if (savedData) {
+                player = JSON.parse(savedData);
+                alert("Chào mừng trở lại!");
+            } else {
+                player.name = nameInput;
+                saveGame();
+                alert("Tạo nhân vật mới thành công!");
+            }
+            
+            showScreen('game-screen');
+            updateUI();
+        }
+
+        // Hàm Đánh quái
+        function attack() {
+            enemyHP -= player.dmg;
+            document.getElementById('log').innerText = `Bạn gây ${player.dmg} sát thương!`;
+
+            if (enemyHP <= 0) {
+                document.getElementById('log').innerText = "Quái chết! Đang chờ quái mới...";
+                dropRate(); // Tính tỉ lệ rớt đồ
+                enemyHP = 100; // Hồi máu quái
+            }
+            updateUI();
+        }
+
+        // Tỉ lệ rớt đồ (20% rớt Kiếm)
+        function dropRate() {
+            let random = Math.random() * 100;
+            if (random < 20) { // 20% rớt Kiếm
+                player.dmg += 5;
+                player.item = "Kiếm Thiên Thạch (+5 Dmg)";
+                alert("CỰC PHẨM! Bạn nhặt được Kiếm Thiên Thạch!");
+                saveGame();
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('player-display').innerText = "Sát thủ: " + player.name;
+            document.getElementById('player-dmg').innerText = player.dmg;
+            document.getElementById('player-item').innerText = player.item;
+            document.getElementById('enemy-hp').innerText = enemyHP;
+        }
+
+        function saveGame() {
+            localStorage.setItem(player.name, JSON.stringify(player));
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function logout() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
+
