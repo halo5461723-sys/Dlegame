@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somalia World V10 - Final Championship</title>
+    <title>Somalia World V12 - No Penalty</title>
     <style>
         :root { --p-color: #a200ff; --gold: #ffd700; --bg-dark: rgba(0, 0, 0, 0.95); }
         body { background: #0b001a; color: #e0b0ff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; overflow-x: hidden; }
@@ -29,12 +29,12 @@
 
 <div class="container" id="main-cont">
     <div id="auth-screen" class="screen active">
-        <h1 style="letter-spacing: 2px;">SOMALIA WORLD</h1>
-        <p style="font-size: 12px; color: #aaa; margin-top: -15px;">Dự Án Đi Thi - Final Version</p>
+        <h1>SOMALIA WORLD V12</h1>
+        <p style="font-size: 12px; color: #aaa; margin-top: -15px;">Safe Economy - No Death Penalty</p>
         <input type="text" id="user" placeholder="Tên anh hùng..."><br>
         <input type="password" id="pass" placeholder="Mật khẩu..."><br>
         <button onclick="auth('login')">VÀO TRẬN</button>
-        <button onclick="auth('reg')" style="background:none; border:none; color:#aaa; font-size:12px;">Chưa có tài khoản? Đăng ký</button>
+        <button onclick="auth('reg')" style="background:none; border:none; color:#aaa; font-size:12px;">Đăng ký tài khoản</button>
     </div>
 
     <div id="job-screen" class="screen">
@@ -55,32 +55,30 @@
             <div class="hp-text-overlay" id="hp-display">50/50</div>
         </div>
         
-        <p style="font-size: 12px; margin: 5px 0 0 0; color: #aaa;">Chọn mục tiêu săn quái:</p>
         <select id="mob-select" onchange="changeMob()"></select>
 
-        <h2 id="mob-name" style="color: #ff4d4d; margin: 10px 0 5px 0; text-shadow: 0 0 5px #000;">-</h2>
+        <h2 id="mob-name" style="color: #ff4d4d; margin: 10px 0 5px 0;">-</h2>
         <div style="font-size: 14px; margin-bottom: 10px;">HP Quái: <span id="mob-hp" style="font-weight:bold; color:#fff;">0</span></div>
         
-        <button onclick="attack()" style="background: #800000; height: 60px; font-size: 20px; box-shadow: 0 4px 0 #500000;">⚔️ TẤN CÔNG ⚔️</button>
+        <button onclick="attack()" style="background: #800000; height: 60px; font-size: 20px;">⚔️ TẤN CÔNG ⚔️</button>
         
         <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-            <button onclick="useHeal()" style="background:#28a745; width:48%; border-color:#fff;">🧪 HỒI MÁU</button>
+            <button onclick="useHeal()" style="background:#28a745; width:48%;">🧪 HỒI MÁU</button>
             <button onclick="showScreen('bag-screen')" style="width:48%;">🎒 BALO</button>
         </div>
-        <button onclick="showScreen('shop-screen')">🛒 CỬA HÀNG TRANG BỊ</button>
-
+        <button onclick="showScreen('shop-screen')">🛒 CỬA HÀNG</button>
         <div id="game-log" class="log"></div>
     </div>
 
     <div id="shop-screen" class="screen">
         <h2>CỬA HÀNG</h2>
-        <p>Vàng bạn có: <span id="shop-gold" style="color:gold;">0</span>$</p>
+        <p>Vàng: <span id="shop-gold" style="color:gold;">0</span>$</p>
         <div id="shop-list"></div>
         <button onclick="showScreen('game-screen')">QUAY LẠI</button>
     </div>
 
     <div id="bag-screen" class="screen">
-        <h2>KHO ĐỒ CỦA BẠN</h2>
+        <h2>BALO</h2>
         <div id="inventory-list"></div>
         <button onclick="showScreen('game-screen')">QUAY LẠI</button>
     </div>
@@ -89,11 +87,11 @@
 <script>
     const STORAGE_KEY = 'SOMALIA_PERMANENT_V1_';
     const MOBS_DATA = [
-        { name: "Quái Slime", hp: 100, gold: 15, phan: 0.1 },
-        { name: "Vua Slime", hp: 300, gold: 100, phan: 0.1 },
-        { name: "Lính Xương", hp: 800, gold: 1500, phan: 0.1 },
-        { name: "Vua Xương", hp: 2000, gold: 3500, phan: 0.1 },
-        { name: "Vua Xương Cổ Đại (BOSS)", hp: 5000, gold: 10000, phan: 0.1 }
+        { name: "Quái Slime", hp: 100, gold: 7, phan: 0.1 },
+        { name: "Vua Slime", hp: 300, gold: 50, phan: 0.1 },
+        { name: "Lính Xương", hp: 800, gold: 750, phan: 0.1 },
+        { name: "Vua Xương", hp: 2000, gold: 1750, phan: 0.1 },
+        { name: "Vua Xương Cổ Đại (BOSS)", hp: 5000, gold: 5000, phan: 0.3 }
     ];
 
     const SHOP_ITEMS = [
@@ -112,13 +110,13 @@
     function auth(type) {
         let u = document.getElementById('user').value.trim();
         let ps = document.getElementById('pass').value.trim();
-        if(!u || !ps) return alert("Vui lòng điền đủ thông tin!");
+        if(!u || !ps) return alert("Nhập đủ thông tin!");
         let saved = localStorage.getItem(STORAGE_KEY + u);
         if(type === 'reg') {
-            if(saved) return alert("Tên tài khoản đã tồn tại!");
+            if(saved) return alert("Tên đã có!");
             p.user = u; p.pass = ps; save(); alert("Đăng ký thành công!"); showScreen('job-screen');
         } else {
-            if(!saved) return alert("Không tìm thấy tài khoản!");
+            if(!saved) return alert("Sai tài khoản!");
             let data = JSON.parse(saved);
             if(data.pass !== ps) return alert("Sai mật khẩu!");
             p = { ...p, ...data }; p.job ? showScreen('game-screen') : showScreen('job-screen');
@@ -127,13 +125,14 @@
     }
 
     function initMobSelect() {
-        document.getElementById('mob-select').innerHTML = MOBS_DATA.map((m, i) => `<option value="${i}">${m.name} (HP: ${m.hp})</option>`).join('');
+        document.getElementById('mob-select').innerHTML = MOBS_DATA.map((m, i) => `<option value="${i}">${m.name}</option>`).join('');
     }
 
     function changeMob() {
         const idx = document.getElementById('mob-select').value;
         mob = { ...MOBS_DATA[idx], maxHp: MOBS_DATA[idx].hp };
-        log(`Mục tiêu hiện tại: ${mob.name}`); updateUI();
+        log(`Đã đổi mục tiêu sang: ${mob.name}`);
+        updateUI();
     }
 
     function setJob(job) {
@@ -151,23 +150,25 @@
     function attack() {
         let stats = calculateStats();
         let dmgToMob = stats.dmg; 
-        let phan = Math.floor(dmgToMob * 0.1); // Cố định phản 10% như bạn chọn
+        let phan = Math.floor(dmgToMob * (mob.phan || 0.1));
 
         mob.hp -= dmgToMob; p.hp -= phan;
         document.getElementById('main-cont').classList.add('shake');
         setTimeout(() => document.getElementById('main-cont').classList.remove('shake'), 200);
 
-        log(`⚔️ Bạn gây: -${dmgToMob} HP. Phản đòn: -${phan} HP.`);
+        log(`⚔️ Bạn gây: -${dmgToMob} HP. Bị phản: -${phan} HP.`);
 
         if(mob.hp <= 0) {
-            let bonus = Math.floor(Math.random() * 30);
+            let bonus = Math.floor(Math.random() * 5);
             p.gold += mob.gold + bonus; p.lvl++;
-            log(`✨ CHIẾN THẮNG! Nhận ${mob.gold + bonus}$ và lên cấp ${p.lvl}!`);
-            mob.hp = mob.maxHp; p.hp = calculateStats().maxHp;
+            log(`✨ DIỆT ${mob.name.toUpperCase()}! +${mob.gold + bonus}$ & LÊN CẤP!`);
+            mob.hp = mob.maxHp;
+            p.hp = calculateStats().maxHp;
         }
         if(p.hp <= 0) {
-            alert("Bạn đã hy sinh! Bị trừ 10% vàng.");
-            p.gold = Math.floor(p.gold * 0.9); p.hp = stats.maxHp; mob.hp = mob.maxHp;
+            alert("Bạn đã tử trận! Hãy hồi sức và quay lại.");
+            // ĐÃ BỎ LỖI TRỪ VÀNG: p.gold = Math.floor(p.gold * 0.9);
+            p.hp = stats.maxHp; mob.hp = mob.maxHp;
         }
         save(); updateUI();
     }
@@ -176,8 +177,8 @@
         let stats = calculateStats();
         if(p.pots > 0 && p.hp < stats.maxHp) {
             p.pots--; p.hp = Math.min(stats.maxHp, p.hp + (stats.maxHp * 0.5));
-            log("🧪 Đã uống Bình Máu! Hồi 50% HP."); save(); updateUI();
-        } else if(p.pots === 0) log("❌ Bạn không có Bình Máu!");
+            log("🧪 Đã dùng bình máu (Hồi 50%)!"); save(); updateUI();
+        } else if(p.pots === 0) log("❌ Bạn không có bình máu!");
     }
 
     function renderShop() {
@@ -185,7 +186,7 @@
             let owned = p.inv.find(i => i.id === itm.id);
             let jobMatch = !itm.job || itm.job === p.job;
             let canBuy = itm.type === 'pot' || (!owned && jobMatch);
-            return `<div class="item-card"><b>${itm.name}</b><br>Giá: <span style="color:gold">${itm.price}$</span> <button onclick="buy(${itm.id})" ${!canBuy ? "disabled" : ""} style="width:auto; float:right; padding:5px 15px;">${owned ? "Đã có" : "Mua"}</button></div>`;
+            return `<div class="item-card"><b>${itm.name}</b><br>Giá: <span style="color:gold">${itm.price}$</span> <button onclick="buy(${itm.id})" ${!canBuy ? "disabled" : ""} style="width:auto; float:right;">${owned ? "Đã sở hữu" : "Mua"}</button></div>`;
         }).join('');
         document.getElementById('shop-list').innerHTML = html;
     }
@@ -197,15 +198,15 @@
             if(itm.type === 'pot') p.pots++; else p.inv.push(itm);
             save(); updateUI(); renderShop();
             log(`Đã mua ${itm.name}!`);
-        } else alert("Bạn không đủ vàng!");
+        } else alert("Thiếu vàng!");
     }
 
     function renderInv() {
         let html = p.inv.map(itm => {
             let isEq = (p.equip.ao?.id === itm.id || p.equip.tay?.id === itm.id);
-            return `<div class="item-card">${itm.name} <button onclick="equip(${itm.id})" style="width:auto; float:right; padding:5px 15px;">${isEq ? "THÁO" : "MẶC"}</button></div>`;
+            return `<div class="item-card">${itm.name} <button onclick="equip(${itm.id})" style="width:auto; float:right;">${isEq ? "THÁO" : "MẶC"}</button></div>`;
         }).join('');
-        document.getElementById('inventory-list').innerHTML = html || "Balo trống rỗng...";
+        document.getElementById('inventory-list').innerHTML = html || "Trống...";
     }
 
     function equip(id) {
