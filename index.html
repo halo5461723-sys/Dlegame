@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somalia World V14.4 - Ancient Skeleton King</title>
+    <title>Somalia World V14.7 - Dark Legion</title>
     <style>
         :root { --p-color: #a200ff; --gold: #ffd700; --bg-dark: rgba(0, 0, 0, 0.95); }
         body { background: #0b001a; color: #e0b0ff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; background-image: url('https://w0.peakpx.com/wallpaper/439/613/HD-wallpaper-purple-asteroid-purple-aesthetic-galaxy.jpg'); background-size: cover; background-attachment: fixed; }
@@ -25,7 +25,7 @@
 
 <div class="container">
     <div id="auth-screen" class="screen active">
-        <h1>SOMALIA WORLD V14.4</h1>
+        <h1>SOMALIA WORLD V14.7</h1>
         <input type="text" id="user" placeholder="Tên nhân vật"><br>
         <input type="password" id="pass" placeholder="Mật khẩu"><br>
         <button onclick="auth('login')">BẮT ĐẦU</button>
@@ -76,32 +76,33 @@
 <script>
     const STORAGE_KEY = 'SOMALIA_V14_DATA_';
     
+    // ĐÃ BỔ SUNG ĐỦ 3 CON HẮC (Quái - Binh - Sĩ)
     const MOBS_DATA = [
-        { name: "Slime Xanh", hp: 100, gold: 20, phan: 0.1, type: "quái" },
-        { name: "Vua Slime", hp: 800, gold: 150, phan: 0.1, type: "boss" },
-        { name: "Lính Xương", hp: 2000, gold: 600, phan: 0.1, type: "quái" },
-        { name: "Vua Xương", hp: 6000, gold: 2500, phan: 0.2, type: "boss" },
-        { name: "Vua Xương Cổ Đại", hp: 15000, gold: 8000, phan: 0.25, type: "boss", drop: { gem: 1, rate: 0.05 } },
-        { name: "Thủy Quái", hp: 30000, gold: 12000, phan: 0.5, type: "quái" },
-        { name: "Thủy Cận Vệ", hp: 50000, gold: 18000, phan: 0.5, type: "quái", drop: { gem: 1, rate: 0.1 } },
-        { name: "Thủy Long (BOSS)", hp: 150000, gold: 35000, phan: 0.3, type: "boss", drop: { gem: 3, rate: 0.3 } },
-        { name: "Hắc Quái", hp: 400000, gold: 55000, phan: 0.5, type: "quái", drop: { gem: 3, rate: 0.3 } },
-        { name: "Hắc Binh", hp: 700000, gold: 50000, phan: 0.5, type: "quái", drop: { gem: 5, rate: 0.3 } },
-        { name: "Hắc Sĩ (LIMIT BOSS)", hp: 1500000, gold: 99000, phan: 0.3, type: "boss", drop: { gem: 10, rate: 1.0 }, special: "time" }
+        { name: "Slime Xanh", hp: 100, gold: 40, phan: 0.1 },
+        { name: "Vua Slime", hp: 1500, gold: 300, phan: 0.1 },
+        { name: "Lính Xương", hp: 4000, gold: 1000, phan: 0.1 },
+        { name: "Vua Xương Cổ Đại", hp: 30000, gold: 15000, phan: 0.2, drop: { gem: 1, rate: 0.1 } },
+        { name: "Thủy Quái", hp: 80000, gold: 25000, phan: 0.5 },
+        { name: "Thủy Long (BOSS)", hp: 300000, gold: 50000, phan: 0.3, drop: { gem: 3, rate: 0.3 } },
+        // BỘ 3 HẮC ÁM CỦA BẠN:
+        { name: "Hắc Quái", hp: 600000, gold: 70000, phan: 0.5, drop: { gem: 3, rate: 0.3 } },
+        { name: "Hắc Binh", hp: 1000000, gold: 80000, phan: 0.5, drop: { gem: 5, rate: 0.3 } },
+        { name: "Hắc Sĩ (LIMIT BOSS)", hp: 2500000, gold: 180000, phan: 0.3, drop: { gem: 10, rate: 1.0 }, special: "time" }
     ];
 
     const SHOP_ITEMS = [
         { id: 100, name: "🧪 Bình Máu", price: 200, type: "pot" },
-        { id: 1, name: "Kiếm Gỗ", price: 100, type: "tay", dmg: 15 },
-        { id: 22, name: "Găng Tay King", price: 50000, type: "tay", dmg: 450, dmgLvl: 3, job: "Cận Chiến" },
-        { id: 23, name: "Trượng Ma Pháp Sư", price: 50000, type: "tay", dmg: 550, dmgLvl: 3, job: "Phép Thuật" },
-        { id: 24, name: "Giày Tận Thế", price: 70000, type: "giay", hpBonus: 20 },
-        { id: 25, name: "Quần Animo", price: 70000, type: "quan", hpBonus: 20 },
-        { id: 26, name: "Nhẫn Blackhole", price: 200000, type: "nhan", hpBonus: 200, dmgRate: 0.05 },
-        { id: 21, name: "Vương Miện Thánh", price: "50%", minGold: 999000, type: "non", dmg: 2000, dmgLvl: 5, dmgRate: 0.1, rarity: "Bí Mật" }
+        { id: 10, name: "⚔️ Kiếm Hiệp Sĩ", price: 2500, type: "tay", dmg: 120, job: "Cận Chiến" },
+        { id: 11, name: "🔮 Trượng Đồ Đệ", price: 2500, type: "tay", dmg: 150, job: "Phép Thuật" },
+        { id: 22, name: "🔥 Găng Tay King", price: 50000, type: "tay", dmg: 450, dmgLvl: 3, job: "Cận Chiến" },
+        { id: 23, name: "⚡ Trượng Ma Pháp Sư", price: 50000, type: "tay", dmg: 550, dmgLvl: 3, job: "Phép Thuật" },
+        { id: 24, name: "👟 Giày Tận Thế", price: 70000, type: "giay", hpBonus: 300 },
+        { id: 25, name: "👖 Quần Animo", price: 70000, type: "quan", hpBonus: 300 },
+        { id: 26, name: "💍 Nhẫn Blackhole", price: 200000, type: "nhan", hpBonus: 800, dmgRate: 0.05 },
+        { id: 21, name: "👑 Vương Miện Thánh", price: "50%", minGold: 999000, type: "non", dmg: 2000, dmgLvl: 5, dmgRate: 0.1, rarity: "Bí Mật" }
     ];
 
-    let p = { user:"", pass:"", job:"", lvl:1, gold:0, gems:0, hp:50, baseMaxHp:50, baseDmg:10, pots:0, inv:[], equip:{ao:null, tay:null, non:null, giay:null, quan:null, nhan:null} };
+    let p = { user:"", pass:"", job:"", lvl:1, gold:0, gems:0, hp:100, baseMaxHp:100, baseDmg:20, pots:0, inv:[], equip:{ao:null, tay:null, non:null, giay:null, quan:null, nhan:null} };
     let mob = { ...MOBS_DATA[0], maxHp: MOBS_DATA[0].hp };
 
     function auth(type) {
@@ -151,7 +152,7 @@
         let s = calculateStats();
         let phan = Math.floor(s.totalDmg * mob.phan);
         mob.hp -= s.totalDmg; p.hp -= phan;
-        log(`⚔️ Gây -${s.totalDmg}. Bị phản -${phan}.`);
+        log(`⚔️ Bạn gây -${s.totalDmg}. Bị phản -${phan}.`);
         if(mob.hp <= 0) {
             p.gold += mob.gold; p.lvl++;
             if(mob.drop && Math.random() <= mob.drop.rate) { p.gems += mob.drop.gem; log(`💎 RƠI ${mob.drop.gem} NGỌC!`); }
@@ -194,7 +195,7 @@
         save(); updateUI(); renderInv();
     }
 
-    function setJob(j) { p.job = j; p.baseMaxHp = (j === 'Cận Chiến' ? 70 : 50); p.hp = p.baseMaxHp; save(); updateUI(); showScreen('game-screen'); }
+    function setJob(j) { p.job = j; p.baseMaxHp = (j === 'Cận Chiến' ? 150 : 120); p.hp = p.baseMaxHp; save(); updateUI(); showScreen('game-screen'); }
     function updateUI() {
         let s = calculateStats();
         document.getElementById('gold').innerText = Math.floor(p.gold);
@@ -213,4 +214,4 @@
     function save() { localStorage.setItem(STORAGE_KEY + p.user, JSON.stringify(p)); }
 </script>
 </body>
-</html/>
+</html>
